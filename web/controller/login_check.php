@@ -27,4 +27,5 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 	die("ログイン画面からアクセスしてください。");
 }
 
+
 ?>
