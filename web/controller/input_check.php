@@ -1,7 +1,7 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] != "POST"){
 
-	$url = "http://" . $_SERVER['HTTP_HOST'] . '/db_practice/signup.php';
+	$url = '../signup.php';
 	header('Location: ' . $url);
 	echo "ユーザー登録画面で入力してください。";
 

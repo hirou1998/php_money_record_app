@@ -8,7 +8,7 @@ $moneymodel = new MoneyModel();
 if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['tmp_token']){
 	//CSRF
 
-	$url = "http://" . $_SERVER['HTTP_HOST'] . '/db_practice/index.php';
+	$url = '../index.php';
 	header('Location: ' . $url);
 
 }elseif ($decoded['updated'] == true) {
