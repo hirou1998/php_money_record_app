@@ -248,7 +248,7 @@ h1{
 	width: 80%;
 	margin:2vw auto;
 }
-.record_list li.buttons span{
+.record_list li.buttons button{
 	padding: 2vw;
 	color: white;
 	border-radius: 1vw;
@@ -256,10 +256,10 @@ h1{
 	margin: 0 1vw;
 	text-align: center;
 }
-.record_list li.buttons span.edit_button{
+.record_list li.buttons button.edit_button{
 	background: green;
 }
-.record_list li.buttons span.delete_button{
+.record_list li.buttons button.delete_button{
 
 	background: red;
 }

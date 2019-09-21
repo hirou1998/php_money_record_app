@@ -54,5 +54,10 @@ class Dao{
 		$stmt->execute($arr);
 	}
 
+	public function delete($sql, array $arr){
+		$stmt = $this->db_instance->prepare($sql);
+		$stmt->execute($arr);
+	}
+
 }
 ?>

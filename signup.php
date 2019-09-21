@@ -16,14 +16,24 @@ if(isset($_SESSION['login'])){
 		</section>
 		<section>
 			<form v-on:submit="validation">
-				<input-part :type="textType" :name="username" :model="inputs.username" :required="required" :err="err.usernameErr"></input-part>
+				<!-- <input-part :type="textType" :name="username" :model="inputs.username" :required="required" :err="err.usernameErr"></input-part>
 				<input-part :type="passwordType" :name="password" :model="inputs.password" :required="required" :err="err.passwordErr"></input-part>
-				<input-part :type="passwordType" :name="username" :model="inputs.username" :required="required" :err="err.usernameErr"></input-part>
-				<!-- <div class="inputArea">
+				<input-part :type="passwordType" :name="username" :model="inputs.username" :required="required" :err="err.usernameErr"></input-part> -->
+				<div class="inputArea">
+					<p>User name</p>
+					<input type="text" name="username" v-model="inputs.username">
+					<span>*required</span>  <span class="red_message">{{ err.usernameErr }}</span>
+				</div>
+				<div class="inputArea">
+					<p>Password</p>
+					<input type="password" name="password" v-model="inputs.password">
+					<span>*required</span>  <span class="red_message">{{ err.passwordErr }}</span>
+				</div>
+				<div class="inputArea">
 					<p>Password (check)</p>
 					<input type="password" name="password_check" v-model="inputs.password_check">
 					<span>*required</span>  <span class="red_message">{{ err.password_checkErr }}</span>
-				</div> -->
+				</div>
 				<div class="inputArea">
 					<p>Email</p>
 					<input type="email" name="email" v-model="inputs.email">
@@ -71,28 +81,28 @@ if(isset($_SESSION['login'])){
 </style>
 
 <script type="text/javascript">
-Vue.component('input-part', {
-	props: {
-		type: String,
-		name: String,
-		model: String,
-		required: String,
-		err: String
-	},
-	template: '<div class="inputArea"><p>{{ name }}</p><input name="name" v-model="model"><span>{{ required }}</span><span class="red_message"> {{ err }}</span></div>'
-})
+// Vue.component('input-part', {
+// 	props: {
+// 		type: String,
+// 		name: String,
+// 		model: String,
+// 		required: String,
+// 		err: String
+// 	},
+// 	template: '<div class="inputArea"><p>{{ name }}</p><input type="type" name="name" v-model="model"><span>{{ required }}</span><span class="red_message"> {{ err }}</span></div>'
+// })
 
 new Vue({
 	el: "#wrapper",
 	data: {
-		textType: 'text',
-		passwordType: 'password',
-		username: 'username',
-		password: 'password',
-		password_check: 'password_check',
-		email: 'email',
-		sex: 'sex',
-		required: '*required',
+		// textType: 'text',
+		// passwordType: 'password',
+		// username: 'username',
+		// password: 'password',
+		// password_check: 'password_check',
+		// email: 'email',
+		// sex: 'sex',
+		// required: '*required',
 		inputs: {
 			username: null,
 			password: null,

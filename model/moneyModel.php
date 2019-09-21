@@ -31,11 +31,21 @@ class MoneyModel{
 	}
 
 	public function getMoneyRecord($userid){
-		$sql = "SELECT type, person, status, amount, currency, comment, deadline FROM money_record WHERE user_id = :userid ORDER BY id DESC" ;
+		$sql = "SELECT id, type, person, status, amount, currency, comment, deadline FROM money_record WHERE user_id = :userid ORDER BY id DESC" ;
 		$arr = array(
 			':userid' => $userid
 		);
 		$result = $this->dao->selectMultipulData($sql, $arr);
+
+		return $result;
+	}
+
+	public function getMoneyRecordById($id){
+		$sql = "SELECT id, type, person, status, amount, currency, comment, deadline FROM money_record WHERE id = :id";
+		$arr = array(
+			':id' => $id
+		);
+		$result = $this->dao->select($sql, $arr);
 
 		return $result;
 	}
@@ -48,16 +58,31 @@ class MoneyModel{
 		$result = $this->dao->selectMultipulData($sql, $arr);
 
 		$personsList = array();
-		foreach($result as $person){
-			$newperson = $person['person'];
+		foreach($result as $item){
+			$newperson = $item['person'];
 			if(in_array($newperson, $personsList) == false){
-				array_push($personsList, $person['person']);
+				array_push($personsList, $item['person']);
 			}else{
 				continue;
 			}
 		}
 
 		return $personsList;
+	}
+
+	public function getRecordId($userid){
+		$sql = 'SELECT id FROM money_record WHERE user_id = :userid ORDER BY id DESC';
+		$arr = array(
+			':userid' => $userid
+		);
+		$result = $this->dao->selectMultipulData($sql, $arr);
+
+		$ids = array();
+		foreach ($result as $item) {
+			array_push($ids, $item['id']);
+		}
+
+		return $ids;
 	}
 
 	public function getRecordBasedOnPerson($userid, $person){
@@ -107,6 +132,29 @@ class MoneyModel{
 		}
 
 		return $data;
+	}
+
+	public function updateMoneyRecord($type, $person, $status, $amount, $currency, $comment, $deadline, $id){
+		$sql = "UPDATE money_record SET type = :type, person = :person, status = :status, amount = :amount, currency = :currency, comment = :comment, deadline = :deadline WHERE id = :id";
+		$arr = array(
+			':type' => $type,
+			':person' => $person,
+			':status' => $status,
+			':amount' => $amount,
+			':currency' => $currency,
+			':comment' => $comment,
+			':deadline' => $deadline,
+			':id' => $id
+		);
+		$this->dao->update($sql, $arr);
+	}
+
+	public function deleteMoneyRecord($id){
+		$sql = "DELETE FROM money_record WHERE id = :id";
+		$arr = array(
+			':id' => $id
+		);
+		$this->dao->delete($sql, $arr);
 	}
 
 }
