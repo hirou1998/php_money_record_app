@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['t
 	require_once '../model/moneyModel.php';
 	$moneymodel = new MoneyModel();
 
-	$moneymodel->insertMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline);
+	$moneymodel->registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline);
 
 	echo json_encode($decoded, true);
 }

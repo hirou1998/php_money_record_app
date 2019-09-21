@@ -6,37 +6,39 @@ if(strpos($_SERVER['HTTP_REFERER'], 'logout') != false){
 	session_destroy();
 	$logout = true;
 }else{
-	require_once './model/userModel.php';
-	$usermodel = new UserModel();
 
-	$title = "TOP";
-	include './modules/header.php';
-
-	$tmp_token = $usermodel->createToken(30);
-	$_SESSION['tmp_token'] = $tmp_token;
-	$profile = $usermodel->getUserProfile($userid);
-
-	require_once './model/moneyModel.php';
-	$moneymodel = new MoneyModel();
-	$money = $moneymodel->getMoneyRecord($userid);
-	$currency_list = $moneymodel->getCurrencyList();
-	$personsList = $moneymodel->getPersonsList($userid);
-	$ids = json_encode($moneymodel->getRecordId($userid));
+	//var_dump("uessepoirjbsebp@s");
 }
- ?>
+$title = "TOP";
+include './modules/header.php';
+require_once './model/userModel.php';
+$usermodel = new UserModel();
+
+$tmp_token = $usermodel->createToken(30);
+$_SESSION['tmp_token'] = $tmp_token;
+$profile = $usermodel->getUserProfile($userid);
+
+require_once './model/moneyModel.php';
+$moneymodel = new MoneyModel();
+$money = $moneymodel->getMoneyRecord($userid);
+$currency_list = $moneymodel->getCurrencyList();
+$personsList = $moneymodel->getPersonsList($userid);
+$ids = json_encode($moneymodel->getRecordId($userid));
+?>
 <body>
 	<div id="wrapper" class="wrapper">
-		<?php
-		if($logout){
-			echo '<p class="alert" v-if="notDeleted">ログアウトしました。<span v-on:click="deleteMessage">×</span></p>';
-		}
-		?>
+		<?php if($logout){ ?>
+			<p class="alert" v-if="notDeleted">ログアウトしました。<span v-on:click="deleteMessage">×</span></p>
+		<?php } ?>
+
 		<section class="top_content">
 			<h1>Money Record</h1>
 			<p>世界中のどこでも、お金の貸し借りをラクラク管理</p>
 		</section>
+
 		<?php
 		if(!empty($_SESSION['username'])){ ?>
+
 			<section>
 				<p class="register_button" v-on:click="showInputArea" v-if="closed">お金の貸し借りを記録する</p>
 				<transition name="fade">
@@ -112,6 +114,7 @@ if(strpos($_SERVER['HTTP_REFERER'], 'logout') != false){
 				<p class="register_button" v-on:click="closeInputArea" v-if="closed == false">入力欄を閉じる</p>
 				<article class="money_record">
 					<?php if($money){ ?>
+
 						<?php foreach($money as $num => $item){ ?>
 						<form v-on:submit.prevent="updateData(<?php echo $num; ?>)">
 							<ul class="record_list">
@@ -136,6 +139,7 @@ if(strpos($_SERVER['HTTP_REFERER'], 'logout') != false){
 							</ul>
 						</form>
 						<?php } ?>
+
 						<transition name="modal">
 							<div v-if="editModalShow" class="modal_over_lay" v-on:click="closeModal">
 								<div class="close_button">×</div>
@@ -204,19 +208,22 @@ if(strpos($_SERVER['HTTP_REFERER'], 'logout') != false){
 								</div>
 							</div>
 						</transition>
+
 						<transition name="modal">
 							<div v-if="deleteModalShow" class="modal_over_lay" v-on:click="closeModal">
 								<div class="close_button">×</div>
 								<div class="modal_content" v-on:click.stop >
 									<form v-on:submit.prevent="sendDelete">
 										<p class="alert">本当に削除してもいいですか?</p>
-										<p class="item">Type: <span>{{edit.type}}</span></p>
-										<p class="item">Person: <span>{{edit.person}}</span></p>
-										<p class="item">Status: <span>{{edit.status}}</span></p>
-										<p class="item">Amount: <span>{{edit.amount}}</span></p>
-										<p class="item">Currency: <span>{{edit.currency}}</span></p>
-										<p class="item">Comment: <span>{{edit.comment}}</span></p>
-										<p class="item">Deadline: <span>{{edit.deadline}}</span></p>
+										<ul class="record_list">
+											<li><span class="key">Type</span><span>{{edit.type}}</span></li>
+											<li><span class="key">Person</span><span>{{edit.person}}</span></li>
+											<li><span class="key">Status</span><span>{{edit.status}}</span></li>
+											<li><span class="key">Amount</span><span>{{edit.amount}}</span></li>
+											<li><span class="key">Currency</span><span>{{edit.currency}}</span></li>
+											<li><span class="key">Comment</span><span>{{edit.comment}}</span></li>
+											<li><span class="key">Deadline</span><span>{{edit.deadline}}</span></li>
+										</ul>
 										<div class="buttonArea">
 											<button class="button" type="submit">削除</button>
 										</div>
@@ -224,11 +231,16 @@ if(strpos($_SERVER['HTTP_REFERER'], 'logout') != false){
 								</div>
 							</div>
 						</transition>
+
 					<?php } else {?>
+
 						<p>お金の貸し借りはまだありません。</p>
+
 					<?php }?>
+
 				</article>
 			</section>
+
 		<?php }else{
 			echo '<section class="button_area">
 					<a href="login.php"><div class="top_button signin_button"><p>Sign In</p></div></a>
@@ -329,8 +341,8 @@ new Vue({
 				axios.post('./controller/money_fields.php', vm.inputs)
 				.then(function(res){
 					console.log(res.data);
-					let url = location.href;
-					location.href = url;
+					//let url = location.href;
+					//location.href = url;
 				})
 				.catch(function(err){
 					console.log(err);

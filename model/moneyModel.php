@@ -14,24 +14,24 @@ class MoneyModel{
 		return $this->currency_list;
 	}
 
-	public function insertMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline){
-		$sql = "INSERT INTO money_record (user_id, type, person, status, amount, currency, comment, deadline)
-				VALUES(:userid, :type, :person, :status, :amount, :currency, :comment, :deadline)";
+	public function registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline){
+		$sql = 'INSERT INTO money_record (user_id, type, person, status, amount, currency, comment, deadline)
+				VALUES (:userid, :type, :person, :status, :amount, :currency, :comment, :deadline)';
 		$arr = array(
-			":userid" => $userid,
-			":type" => $type,
-			":person" => $person,
-			":status" => $status,
-			":amount" => $amount,
-			":currecy" => $currency,
-			":comment" => $comment,
-			":deadline" => $deadline
+			':userid' => $userid,
+			':type' => $type,
+			':person' => $person,
+			':status' => $status,
+			':amount' => $amount,
+			':currency' => $currency,
+			':comment' => $comment,
+			':deadline' => $deadline
 		);
 		$this->dao->insert($sql, $arr);
 	}
 
 	public function getMoneyRecord($userid){
-		$sql = "SELECT id, type, person, status, amount, currency, comment, deadline FROM money_record WHERE user_id = :userid ORDER BY id DESC" ;
+		$sql = "SELECT id, type, person, status, amount, currency, comment, deadline, reg_date FROM money_record WHERE user_id = :userid ORDER BY id DESC" ;
 		$arr = array(
 			':userid' => $userid
 		);
@@ -41,7 +41,7 @@ class MoneyModel{
 	}
 
 	public function getMoneyRecordById($id){
-		$sql = "SELECT id, type, person, status, amount, currency, comment, deadline FROM money_record WHERE id = :id";
+		$sql = "SELECT id, type, person, status, amount, currency, comment, deadline, reg_date FROM money_record WHERE id = :id";
 		$arr = array(
 			':id' => $id
 		);
@@ -86,7 +86,7 @@ class MoneyModel{
 	}
 
 	public function getRecordBasedOnPerson($userid, $person){
-		$sql = 'SELECT type, status, amount, currency, comment, deadline FROM money_record WHERE user_id = :userid AND person = :person ORDER BY id DESC';
+		$sql = 'SELECT type, status, amount, currency, comment, deadline, reg_date FROM money_record WHERE user_id = :userid AND person = :person ORDER BY id DESC';
 		$arr = array(
 			':userid' => $userid,
 			':person' => $person

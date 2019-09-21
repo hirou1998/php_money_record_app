@@ -9,5 +9,5 @@ $dao = new Dao();
 //var_dump($dao->select("SELECT * FROM user WHERE username = :username", array(':username' => 'yamada')));
 require_once './moneyModel.php';
 $moneymodel = new MoneyModel;
-$moneymodel->getAllRecordsBasedOnPerson(1);
+//$moneymodel->registerMoneyRecord(1, '借り', '木内', '未清算', 320, 'JPY', 'ごはん', NULL);
 ?>

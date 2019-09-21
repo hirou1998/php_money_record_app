@@ -33,36 +33,43 @@ $personsLIst = $moneymodel->getPersonsList($userid);
 						<p class="profile_text"><span>currency: </span><?php echo $profile['currency']; ?></p>
 					</div>
 				</div>
-				<div class="buttonArea">
+				<div class="buttonArea profile_edit_button">
 					<button><a href="profile.php"><p>編集</p></a></button>
 				</div>
 			</article>
 		</section>
 		<section>
+			<a href="./index.php"　class="register_operate_records"><p class="register_button">お金の貸し借りを記録・編集・削除する</p></a>
 			<article>
-				<?php foreach ($records as $key => $record) { ?>
+				<?php foreach ($records as $num => $record) { ?>
 					<ul class="record_block">
-						<li class="record_block_top"><span class="person_name"><?php echo $personsLIst[$key]; ?></span>
-						<?php $total = array_pop($record); ?>
-						<span class="total">合計 <span class="total_amount"><?php echo $total; ?></span> <?php echo $profile['currency']; ?></span></li>
-						<?php foreach ($record as $key => $item) { ?>
-							<?php 
-							$total = array_pop($item); 
-							?>
-							<ul class="top_row">						
-							<?php if($key == 0){ ?>
-								<?php foreach ($item as $key => $value) { ?>
-								<li>
-									<span class="title <?php echo $key . '_title'; ?>"><?php echo $key; ?></span>
-									<span class="<?php echo $key . '_item'; ?>"><?php echo $value; ?></span>
-								<?php } ?>
+						<li class="record_block_top"><span class="person_name"><?php echo $personsLIst[$num]; ?></span>
+							<?php $total = array_pop($record); ?>
+							<span class="total">合計
+							<?php if($total > 0){ ?>
+								<span class="total_amount amount_plus"><?php echo $total; ?></span>
 							<?php }else{ ?>
-								<?php foreach ($item as $key => $value) { ?>
-									<span><?php echo $value; ?></span>
-								</li>
+								<span class="total_amount amount_minus"><?php echo $total; ?></span>
+							<?php } ?> 
+							<?php echo $profile['currency']; ?></span>
+						</li>
+						<div class="see_more_button" v-on:click="showMoreRecords('<?php echo $personsLIst[$num]; ?>')" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?> == false">すべて表示</div>
+						<?php foreach ($record as $key => $item) { ?>
+							<?php if($key == 0){ ?>
+								<ul class="record_list">
+								<?php foreach($item as $key => $value){ ?>						
+									<li><span class="key"><?php echo $key; ?></span><span class="value"><?php echo $value; ?></span></li>
 								<?php } ?>
+								</ul>
+							<?php }else{ ?>
+								<transition name="fade">
+									<ul class="record_list" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">	
+									<?php foreach($item as $key => $value){ ?>					
+										<li><span class="key"><?php echo $key; ?></span><span class="value"><?php echo $value; ?></span></li>
+									<?php } ?>
+									</ul>
+								</transition>
 							<?php } ?>
-							</ul>
 						<?php } ?>
 					</ul>
 				<?php } ?>
@@ -71,3 +78,21 @@ $personsLIst = $moneymodel->getPersonsList($userid);
 	</div>
 </body>
 </html>
+
+<script type="text/javascript">
+new Vue({
+	el: '#wrapper',
+	data: {
+		recordsVisibility: {
+			<?php foreach ($personsLIst as $key => $value){ ?>
+				<?php echo $value; ?>: false,
+			<?php } ?>
+		}
+	},
+	methods: {
+		showMoreRecords: function(person){
+			this.$set(this.recordsVisibility, person, true);
+		}
+	}
+})
+</script>
