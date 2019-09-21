@@ -295,3 +295,36 @@ h1{
 .top_row span.title{
 	font-weight: bold;
 }
+
+.modal-enter-active, .modal-leave-active {
+  transition: opacity .5s;
+}
+.modal-enter, .modal-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+.modal_over_lay{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 4;
+	background: rgba(0,0,0,0.8);
+}
+.modal_content{
+	background: #8eafc1;
+    padding: 2vw;
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.close_button{
+	position: absolute;
+    right: 3vw;
+    top: 3vw;
+    font-size: 7vw;
+    font-weight: bold;
+    color: white;
+}

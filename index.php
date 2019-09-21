@@ -137,85 +137,91 @@ if(strpos($_SERVER['HTTP_REFERER'], 'logout') != false){
 						</form>
 						<?php } ?>
 						<transition name="modal">
-							<div v-if="editModalShow">
-								<form v-on:submit.prevent="sendUpdate">
-									<div class="inputArea">
-										<p>type</p>
-										<select type="select" name="type" v-model="edit.type">
-											<option value="貸し">貸し</option>
-											<option value="借り">借り</option>
-										</select>
-									</div>
-									<div class="inputArea">
-										<p>Person</p>
-										<div class="checkArea">
-											<input id="radio1" type="radio" name="choose" value="select" v-model="inputs.choose" v-on:change="changeOption">
-											<label class="check_label" for="radio1">履歴から選択する</label>
-											<input id="radio2" type="radio" name="choose" value="register" v-model=	"inputs.choose" v-on:change="changeOption">
-											<label class="check_label" for="radio2">新規入力する</label>
+							<div v-if="editModalShow" class="modal_over_lay" v-on:click="closeModal">
+								<div class="close_button">×</div>
+								<div class="modal_content" v-on:click.stop >
+									<form v-on:submit.prevent="sendUpdate">
+										<div class="inputArea">
+											<p>type</p>
+											<select type="select" name="type" v-model="edit.type">
+												<option value="貸し">貸し</option>
+												<option value="借り">借り</option>
+											</select>
 										</div>
-										<div>
-											<select v-if="select" v-model="edit.person">
+										<div class="inputArea">
+											<p>Person</p>
+											<div class="checkArea">
+												<input id="radio1" type="radio" name="choose" value="select" v-model="inputs.choose" v-on:change="changeOption">
+												<label class="check_label" for="radio1">履歴から選択する</label>
+												<input id="radio2" type="radio" name="choose" value="register" v-model=	"inputs.choose" v-on:change="changeOption">
+												<label class="check_label" for="radio2">新規入力する</label>
+											</div>
+											<div>
+												<select v-if="select" v-model="edit.person">
+													<?php
+													foreach ($personsList as $person) {
+														echo '<option value =' . $person . '>' . $person . '</option>';
+													}
+													?>
+												</select>
+												<input type="text" name="person" v-model="edit.person" v-else placeholder="Enter person's name"> 
+											</div>
+										</div>
+										<div class="inputArea">
+											<p>Status</p>
+											<select v-model="edit.status">
+												<option value="未清算">未清算</option>
+												<option value="清算済">清算済</option>
+											</select>
+										</div>
+										<div class="inputArea">
+											<p>Amount</p>
+											<input type="number" name="amount" v-model="edit.amount">
+										</div>
+										<div class="inputArea">
+											<p>Currency</p>
+											<select type="select" name="currency" v-model="edit.currency">
 												<?php
-												foreach ($personsList as $person) {
-													echo '<option value =' . $person . '>' . $person . '</option>';
+												foreach($currency_list as $currency_item){
+													echo '<option value=' . $currency_item . '>' . $currency_item . '</option>';
 												}
 												?>
 											</select>
-											<input type="text" name="person" v-model="edit.person" v-else placeholder="Enter person's name"> 
 										</div>
-									</div>
-									<div class="inputArea">
-										<p>Status</p>
-										<select v-model="edit.status">
-											<option value="未清算">未清算</option>
-											<option value="清算済">清算済</option>
-										</select>
-									</div>
-									<div class="inputArea">
-										<p>Amount</p>
-										<input type="number" name="amount" v-model="edit.amount">
-									</div>
-									<div class="inputArea">
-										<p>Currency</p>
-										<select type="select" name="currency" v-model="edit.currency">
-											<?php
-											foreach($currency_list as $currency_item){
-												echo '<option value=' . $currency_item . '>' . $currency_item . '</option>';
-											}
-											?>
-										</select>
-									</div>
-									<div class="inputArea">
-										<p>Comment</p>
-										<textarea name="comment" v-model="edit.comment"></textarea>
-									</div>
-									<div class="inputArea">
-										<p>Deadline</p>
-										<input type="date" name="deadline" v-model="edit.deadline">
-									</div>
-									<input type="hidden" name="isUpdate" v-model="edit.updated">
-									<div class="buttonArea">
-										<button class="button" type="submit">変更を保存</button>
-									</div>
-								</form>
+										<div class="inputArea">
+											<p>Comment</p>
+											<textarea name="comment" v-model="edit.comment"></textarea>
+										</div>
+										<div class="inputArea">
+											<p>Deadline</p>
+											<input type="date" name="deadline" v-model="edit.deadline">
+										</div>
+										<input type="hidden" name="isUpdate" v-model="edit.updated">
+										<div class="buttonArea">
+											<button class="button" type="submit" v-on:click.stop >変更を保存</button>
+										</div>
+									</form>
+								</div>
 							</div>
 						</transition>
 						<transition name="modal">
-							<div v-if="deleteModalShow">
-								<form v-on:submit.prevent="sendDelete">
-									<p class="alert">本当に削除してもいいですか?</p>
-									<p class="item">Type: <span>{{edit.type}}</span></p>
-									<p class="item">Person: <span>{{edit.person}}</span></p>
-									<p class="item">Status: <span>{{edit.status}}</span></p>
-									<p class="item">Amount: <span>{{edit.amount}}</span></p>
-									<p class="item">Currency: <span>{{edit.currency}}</span></p>
-									<p class="item">Comment: <span>{{edit.comment}}</span></p>
-									<p class="item">Deadline: <span>{{edit.deadline}}</span></p>
-									<div class="buttonArea">
-										<button class="button" type="submit">削除</button>
-									</div>
-								</form>
+							<div v-if="deleteModalShow" class="modal_over_lay" v-on:click="closeModal">
+								<div class="close_button">×</div>
+								<div class="modal_content" v-on:click.stop >
+									<form v-on:submit.prevent="sendDelete">
+										<p class="alert">本当に削除してもいいですか?</p>
+										<p class="item">Type: <span>{{edit.type}}</span></p>
+										<p class="item">Person: <span>{{edit.person}}</span></p>
+										<p class="item">Status: <span>{{edit.status}}</span></p>
+										<p class="item">Amount: <span>{{edit.amount}}</span></p>
+										<p class="item">Currency: <span>{{edit.currency}}</span></p>
+										<p class="item">Comment: <span>{{edit.comment}}</span></p>
+										<p class="item">Deadline: <span>{{edit.deadline}}</span></p>
+										<div class="buttonArea">
+											<button class="button" type="submit">削除</button>
+										</div>
+									</form>
+								</div>
 							</div>
 						</transition>
 					<?php } else {?>
@@ -387,6 +393,10 @@ new Vue({
 			.catch(function(err){
 				console.log(err);
 			});
+		},
+		closeModal: function(){
+			this.editModalShow = false;
+			this.deleteModalShow = false;
 		}
 	}
 })
