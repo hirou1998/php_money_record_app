@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <?php
-require('../vendor/autoload.php');
+//require('../vendor/autoload.php');
 
 if(strpos($_SERVER['HTTP_REFERER'], 'logout') != false){
 	session_start();
