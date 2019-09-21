@@ -1,9 +1,9 @@
 <?php
 
 class Dao{
-	const DSN = 'mysql:dbname=myDB;host=localhost;charset=utf8;';
-	const USERNAME = 'root';
-	const PASSWORD = 'Hiromu1998';
+	const DSN = 'mysql:dbname=heroku_5d86ffe5df9a291;host=us-cdbr-iron-east-02.cleardb.net;charset=utf8;';
+	const USERNAME = 'b2b07fb24265d9';
+	const PASSWORD = '64e45a57';
 
 	private $db_instance = null;
 
