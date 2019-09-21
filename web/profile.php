@@ -4,7 +4,7 @@
 $title = "Profile";
 include './modules/header.php';
 if(empty($_SESSION['username'])){
-	$url = "http://" . $_SERVER['HTTP_HOST'] . '/db_practice/index.php';
+	$url = '../index.php';
 	header('Location: ' . $url);
 }
 require_once './model/userModel.php';
