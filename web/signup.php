@@ -74,12 +74,7 @@ if(isset($_SESSION['login'])){
 </body>
 </html>
 
-<style type="text/css">
-.red_message{
-	color: red;
-}
-</style>
-
+<script type="text/javascript" src="./js/loading.js"></script>
 <script type="text/javascript">
 // Vue.component('input-part', {
 // 	props: {

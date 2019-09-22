@@ -2,8 +2,8 @@
 <html>
 <?php
 //require('../vendor/autoload.php');
-
-if(strpos($_SERVER['HTTP_REFERER'], 'logout') != false){
+$refer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+if(strpos($refer, 'logout') != false){
 	session_start();
 	session_destroy();
 	$logout = true;
@@ -29,7 +29,7 @@ $personsList = $moneymodel->getPersonsList($userid);
 $ids = json_encode($moneymodel->getRecordId($userid));
 ?>
 <body>
-	<div id="wrapper" class="wrapper">
+	<div id="wrapper" class="wrapper wrapper_none">
 		<?php if($logout){ ?>
 			<p class="alert" v-if="notDeleted">ログアウトしました。<span v-on:click="deleteMessage">×</span></p>
 		<?php } ?>
@@ -254,6 +254,7 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 	</div>
 </body>
 </html>
+<script type="text/javascript" src="./js/loading.js"></script>
 <script type="text/javascript">
 new Vue({
 	el: '#wrapper',

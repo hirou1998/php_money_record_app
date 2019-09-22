@@ -52,6 +52,9 @@ h1{
 	min-height: 100vh;
 	position: relative;
 }
+.wrapper.wrapper_none{
+	display: none;
+}
 .alert{
 	background: #ffcfcf;
     width: 90%;
@@ -60,9 +63,15 @@ h1{
     text-align: center;
     border-radius: 2vw;
 }
+.red_message{
+	color: red;
+}
 /*header*/
 nav{
 	background: white;
+}
+nav.nav_none{
+	display: none;
 }
 nav ul{
 	display: flex;
@@ -361,4 +370,71 @@ h1{
 	border-radius: 2vw;
 	padding: 1.5vw 0;
 	text-align: center;
+}
+
+/*loading*/
+#loading{
+	width: 100%;
+	height: 100vh;
+	background-image: linear-gradient(to bottom, #ffd043, #b3c26b);
+	position: relative;
+	display: block;
+	transition: 1s;
+}
+.loading_content{
+	display: flex;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.loading_content .circle{
+	display: block;
+	width: 4vw;
+	height: 4vw;
+	background:white;
+	border-radius: 50%;
+	margin: 0 2vw;
+}
+.first_circle{
+	animation: circle_animation_first 1s infinite ease-out; 
+}
+.second_circle{
+	animation: circle_animation_second 1s infinite ease-out;
+}
+.third_circle{
+	animation: circle_animation_third 1s infinite ease-out;	
+}
+@keyframes circle_animation_first{
+	0%{
+		transform: translate(0%, 0%);
+	}
+	15%{
+		transform: translate(0%, -50%);
+	}
+	30%{
+		transform: translate(0%, 0%);
+	}
+}
+@keyframes circle_animation_second{
+	30%{
+		transform: translate(0%, 0%);
+	}
+	45%{
+		transform: translate(0%, -50%);
+	}
+	60%{
+		transform: translate(0%, 0%);
+	}
+}
+@keyframes circle_animation_third{
+	60%{
+		transform: translate(0%, 0%);
+	}
+	75%{
+		transform: translate(0%, -50%);
+	}
+	90%{
+		transform: translate(0%, 0%);
+	}
 }

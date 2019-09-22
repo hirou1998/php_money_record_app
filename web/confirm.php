@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	</div>
 </body>
 </html>
+<script type="text/javascript" src="./js/loading.js"></script>
 <script type="text/javascript">
 setTimeout(function(){
 	location.href = 'mypage.php';

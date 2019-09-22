@@ -51,6 +51,7 @@ $currency_list = $moneymodel->getCurrencyList();
 </body>
 </html>
 
+<script type="text/javascript" src="./js/loading.js"></script>
 <script type="text/javascript">
 new Vue({
 	el: '#wrapper',

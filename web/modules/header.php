@@ -15,8 +15,12 @@ $url = $_SERVER['REQUEST_URI'];
 	<link rel="stylesheet" type="text/css" href="./css/style_sp.css" media="screen and (max-width: 800px)">
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+	<script
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+  crossorigin="anonymous"></script>
 </head>
-<nav>
+<nav id="navigation" class="nav_none">
 	<ul>
 		<li><a href="index.php">Money Record</a></li>
 		<?php
@@ -38,3 +42,11 @@ $url = $_SERVER['REQUEST_URI'];
 		?>
 	</ul>
 </nav>
+
+<div id="loading">
+	<div class="loading_content">
+		<span class="circle first_circle"></span>
+		<span class="circle second_circle"></span>
+		<span class="circle third_circle"></span>
+	</div>
+</div>

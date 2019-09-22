@@ -31,6 +31,7 @@ include './modules/header.php';
 	</div>
 </body>
 </html>
+<script type="text/javascript" src="./js/loading.js"></script>
 <script type="text/javascript">
 new Vue({
 	el: "#wrapper",
