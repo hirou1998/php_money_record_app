@@ -16,7 +16,7 @@ $profile = $usermodel->getUserProfile($userid);
 
 require_once './model/moneyModel.php';
 $moneymodel = new MoneyModel();
-$records = $moneymodel->getAllRecordsBasedOnPerson($userid);
+$records = $moneymodel->getAllRecordsBasedOnPerson($userid, $profile['currency']);
 $personsLIst = $moneymodel->getPersonsList($userid);
 ?>
 <body>

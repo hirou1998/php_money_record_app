@@ -1,13 +1,38 @@
 <?php
 require_once 'dao.php';
+require_once 'userModel.php';
 
 class MoneyModel{
 
 	private $dao = null;
+	private $uermodel = null;
 	private $currency_list = array('JPY', 'USD', 'EUR', 'SEK');
+	private $exchange_rate_list = array(
+		"JPY" => array(
+			"USD" => 107.55,
+			"EUR" => 118.52,
+			"SEK" => 11.08
+		),
+		"USD" => array(
+			"JPY" => 0.0092,
+			"EUR" => 1.102,
+			"SEK" => 0.103
+		),
+		"EUR" => array(
+			"JPY" => 0.0084,
+			"USD" => 0.907,
+			"SEK" => 0.093,
+		),
+		"SEK" => array(
+			"JPY" => 0.09,
+			"USD" => 9.70,
+			"EUR" => 10.693
+		)
+	);
 
 	public function __construct(){
 		$this->dao = new Dao();
+		$this->usermodel = new UserModel();
 	}
 
 	public function getCurrencyList(){
@@ -96,27 +121,39 @@ class MoneyModel{
 		return $result;
 	}
 
-	public function calculationTotalAmount($result){
+	public function calculationTotalAmount($result, $myCurrency){
 		$totalAmount = 0;
 		foreach ($result as $item) {	
 			if($item['status'] == '未清算'){
-				if($item['type'] == '貸し'){
-					$amount =intval($item['amount']);
-					$totalAmount += $amount;
+				//exchange
+				if($item['currency'] == $myCurrency){
+					if($item['type'] == '貸し'){
+						$amount =intval($item['amount']);
+						$totalAmount += $amount;
+					}else{
+						$amount =intval($item['amount']);
+						$totalAmount -= $amount;
+					}
 				}else{
-					$amount =intval($item['amount']);
-					$totalAmount -= $amount;
+					$exchange_rate = $this->calculateExchange($myCurrency, $item['currency']);
+					//var_dump($exchange_rate);
+					if($item['type'] == '貸し'){
+						$amount =intval($item['amount'] * $exchange_rate);
+						$totalAmount += $amount;
+					}else{
+						$amount =intval($item['amount']) * $exchange_rate;
+						$totalAmount -= $amount;
+					}
 				}
 			}else{
 				continue;
 			}
 		}
-
-		
-		return $totalAmount;
+	
+		return round($totalAmount, 2);
 	}
 
-	public function getAllRecordsBasedOnPerson($userid){
+	public function getAllRecordsBasedOnPerson($userid, $myCurrency){
 		$personsList = $this->getPersonsList($userid);
 		$result = array();
 		foreach ($personsList as $person) {
@@ -126,7 +163,7 @@ class MoneyModel{
 
 		$data = array();
 		foreach ($result as $item) {
-			$total = $this->calculationTotalAmount($item);
+			$total = $this->calculationTotalAmount($item, $myCurrency);
 			$item = $item + array('total' => $total);
 			array_push($data, $item);
 		}
@@ -155,6 +192,12 @@ class MoneyModel{
 			':id' => $id
 		);
 		$this->dao->delete($sql, $arr);
+	}
+
+	public function calculateExchange($myCurrency, $recordCurrency){
+		$exchange_rate = $this->exchange_rate_list[$myCurrency][$recordCurrency];
+
+		return $exchange_rate;
 	}
 
 }
