@@ -345,8 +345,8 @@ new Vue({
 				axios.post('./controller/money_fields.php', vm.inputs)
 				.then(function(res){
 					console.log(res.data);
-					//let url = location.href;
-					//location.href = url;
+					let url = location.href;
+					location.href = url;
 				})
 				.catch(function(err){
 					console.log(err);
