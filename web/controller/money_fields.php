@@ -15,11 +15,12 @@ if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['t
 	$currency = $decoded['currency'];
 	$comment = $decoded['comment'];
 	$deadline = $decoded['deadline'];
+	$date = $decoded['date'];
 
 	require_once '../model/moneyModel.php';
 	$moneymodel = new MoneyModel();
 
-	$moneymodel->registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline);
+	$moneymodel->registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline, $date);
 
 	echo json_encode($decoded, true);
 }

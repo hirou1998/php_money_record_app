@@ -107,6 +107,11 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 								<p>Deadline</p>
 								<input type="date" name="deadline" v-model="inputs.deadline">
 							</div>
+							<div class="inputArea">
+								<p>Date</p>
+								<input type="date" name="date" v-model="inputs.date">
+								<span>*required</span>  <span class="red_message">{{ err.dateErr }}</span>
+							</div>
 							<input type="hidden" name="tmp_token" v-model="inputs.tmp_token">
 							<div class="buttonArea">
 								<button type="submit" class="button">登録</button>
@@ -270,13 +275,15 @@ new Vue({
 			currency: '<?php echo $profile["currency"]; ?>',
 			comment: null,
 			deadline: null,
+			date: '<?php echo date("Y-m-d"); ?>',
 			tmp_token: '<?php echo $_SESSION["tmp_token"]; ?>'
 		},
 		err: {
 			typeErr: null,
 			personErr: null,
 			statusErr: null,
-			amountErr: null
+			amountErr: null,
+			dateErr: null
 		},
 		select: true,
 		isErr: false,

@@ -39,9 +39,9 @@ class MoneyModel{
 		return $this->currency_list;
 	}
 
-	public function registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline){
-		$sql = 'INSERT INTO money_record (user_id, type, person, status, amount, currency, comment, deadline)
-				VALUES (:userid, :type, :person, :status, :amount, :currency, :comment, :deadline)';
+	public function registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline, $date){
+		$sql = 'INSERT INTO money_record (user_id, type, person, status, amount, currency, comment, deadline, reg_date)
+				VALUES (:userid, :type, :person, :status, :amount, :currency, :comment, :deadline, :reg_date)';
 		$arr = array(
 			':userid' => $userid,
 			':type' => $type,
@@ -50,7 +50,8 @@ class MoneyModel{
 			':amount' => $amount,
 			':currency' => $currency,
 			':comment' => $comment,
-			':deadline' => $deadline
+			':deadline' => $deadline,
+			':reg_date' => $date
 		);
 		$this->dao->insert($sql, $arr);
 	}
