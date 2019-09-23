@@ -60,6 +60,7 @@ h1{
 	background-image: url("../img/many_currenceis.jpg");
 	background-size: contain;
 	color: white;
+	padding-top: 30vw;
 }
 .top_wrapper::after{
 	content: "";
@@ -127,9 +128,6 @@ nav ul li a{
 .top_content{
 	padding: 2vw 0;
 	margin: 0 0 6vw;
-}
-.top_main{
-	margin-top: 30vw;
 }
 h1{
 	font-size: 12vw;
