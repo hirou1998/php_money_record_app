@@ -36,7 +36,7 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 
 		<section class="top_content">
 			<h1>Money Record</h1>
-			<p>世界中のどこでも、お金の貸し借りをラクラク管理</p>
+			<p>世界中のどこでも、お金の貸し借りをラクラク管理<br>どんな通貨の貸し借りもMY通貨に自動計算</p>
 		</section>
 
 		<?php
@@ -125,7 +125,13 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 
 						<?php foreach($money as $num => $item){ ?>
 						<form v-on:submit.prevent="updateData(<?php echo $num; ?>)">
-							<ul class="record_list">
+
+							<?php if($item['type'] == "貸し"){ ?>
+							<ul class="record_list lend">
+							<?php }else{ ?>
+							<ul class="record_list borrow">
+							<?php } ?>
+
 							<?php foreach($item as $key => $value){ ?>
 								<?php if($key == 'id'){ ?>
 									<input type="hidden" name="record_id" v-model="postData.record_id[<?php echo $num; ?>]">

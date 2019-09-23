@@ -4,6 +4,7 @@ body{
 	background-image: linear-gradient(to bottom, #ffd043, #b3c26b);
 	background-repeat: no-repeat;
 	height: auto;
+	font-size: 3.8vw;
 }
 ul{
 	margin:0;
@@ -252,8 +253,12 @@ h1{
 	padding: 4vw;
     width: 88%;
     margin: 2vw auto;
-    background: rgba(225,225,225,0.84);
+ 	background: rgba(225,225,225,0.84);
     border-radius: 2vw;
+    border: solid rgba(0,0,0,0.84);
+}
+.borrow{
+	background: rgba(255, 185, 185, 0.84);
 }
 .record_list li{
 	display: flex;
@@ -354,6 +359,7 @@ h1{
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 2vw;
+    max-height: 87vh;
 }
 .close_button{
 	position: absolute;
