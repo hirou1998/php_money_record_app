@@ -43,83 +43,88 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 		if(!empty($_SESSION['username'])){ ?>
 
 			<section>
-				<p class="register_button" v-on:click="showInputArea" v-if="closed">お金の貸し借りを記録する</p>
-				<transition name="fade">
-					<div v-if="closed == false" class="money_fields">
-						<?php// include './modules/money_fields.php'; ?>
-						<form v-on:submit="submit">
-							<div class="inputArea">
-								<p>type</p>
-								<select type="select" name="type" v-model="inputs.type">
-									<option value="貸し">貸し</option>
-									<option value="借り">借り</option>
-								</select>
-								<span>*required</span>  <span class="red_message">{{ err.typeErr }}</span>
-							</div>
-							<div class="inputArea">
-								<p>Person</p>
-								<div class="checkArea">
-									<input id="radio1" type="radio" name="choose" value="select" v-model="inputs.choose" v-on:change="changeOption">
-									<label class="check_label" for="radio1">履歴から選択する</label>
-									<input id="radio2" type="radio" name="choose" value="register" v-model=	"inputs.choose" v-on:change="changeOption">
-									<label class="check_label" for="radio2">新規入力する</label>
+				<article>
+					<p class="register_button" v-on:click="showInputArea" v-if="closed">お金の貸し借りを記録する</p>
+					<transition name="fade">
+						<div v-if="closed == false" class="money_fields">
+							<?php// include './modules/money_fields.php'; ?>
+							<form v-on:submit="submit">
+								<div class="inputArea">
+									<p>type</p>
+									<select type="select" name="type" v-model="inputs.type">
+										<option value="貸し">貸し</option>
+										<option value="借り">借り</option>
+									</select>
+									<span>*required</span>  <span class="red_message">{{ err.typeErr }}</span>
 								</div>
-								<div>
-									<select v-if="select" v-model="inputs.person">
+								<div class="inputArea">
+									<p>Person</p>
+									<div class="checkArea">
+										<input id="radio1" type="radio" name="choose" value="select" v-model="inputs.choose" v-on:change="changeOption">
+										<label class="check_label" for="radio1">履歴から選択する</label>
+										<input id="radio2" type="radio" name="choose" value="register" v-model=	"inputs.choose" v-on:change="changeOption">
+										<label class="check_label" for="radio2">新規入力する</label>
+									</div>
+									<div>
+										<select v-if="select" v-model="inputs.person">
+											<?php
+											foreach ($personsList as $person) {
+												echo '<option value =' . $person . '>' . $person . '</option>';
+											}
+											?>
+										</select>
+										<input type="text" name="person" v-model="inputs.person" v-else placeholder="Enter person's name"> 
+									</div>
+									<span>*required</span>  <span class="red_message">{{ err.personErr }}</span>
+								</div>
+								<div class="inputArea">
+									<p>Status</p>
+									<select v-model="inputs.status">
+										<option value="未清算">未清算</option>
+										<option value="清算済">清算済</option>
+									</select>
+									<span>*required</span>  <span class="red_message">{{ err.statusErr }}</span>
+								</div>
+								<div class="inputArea">
+									<p>Amount</p>
+									<input type="number" name="amount" v-model="inputs.amount">
+									<span>*required</span>  <span class="red_message">{{ err.amountErr }}</span>
+								</div>
+								<div class="inputArea">
+									<p>Currency</p>
+									<select type="select" name="currency" v-model="inputs.currency">
 										<?php
-										foreach ($personsList as $person) {
-											echo '<option value =' . $person . '>' . $person . '</option>';
+										foreach($currency_list as $currency_item){
+											echo '<option value=' . $currency_item . '>' . $currency_item . '</option>';
 										}
 										?>
 									</select>
-									<input type="text" name="person" v-model="inputs.person" v-else placeholder="Enter person's name"> 
 								</div>
-								<span>*required</span>  <span class="red_message">{{ err.personErr }}</span>
-							</div>
-							<div class="inputArea">
-								<p>Status</p>
-								<select v-model="inputs.status">
-									<option value="未清算">未清算</option>
-									<option value="清算済">清算済</option>
-								</select>
-								<span>*required</span>  <span class="red_message">{{ err.statusErr }}</span>
-							</div>
-							<div class="inputArea">
-								<p>Amount</p>
-								<input type="number" name="amount" v-model="inputs.amount">
-								<span>*required</span>  <span class="red_message">{{ err.amountErr }}</span>
-							</div>
-							<div class="inputArea">
-								<p>Currency</p>
-								<select type="select" name="currency" v-model="inputs.currency">
-									<?php
-									foreach($currency_list as $currency_item){
-										echo '<option value=' . $currency_item . '>' . $currency_item . '</option>';
-									}
-									?>
-								</select>
-							</div>
-							<div class="inputArea">
-								<p>Comment</p>
-								<textarea name="comment" v-model="inputs.comment"></textarea>
-							</div>
-							<div class="inputArea">
-								<p>Deadline</p>
-								<input type="date" name="deadline" v-model="inputs.deadline">
-							</div>
-							<div class="inputArea">
-								<p>Date</p>
-								<input type="date" name="date" v-model="inputs.date">
-								<span>*required</span>  <span class="red_message">{{ err.dateErr }}</span>
-							</div>
-							<input type="hidden" name="tmp_token" v-model="inputs.tmp_token">
-							<div class="buttonArea">
-								<button type="submit" class="button">登録</button>
-							</div>
-						</form>
-					</div>
-				</transition>
-				<p class="register_button" v-on:click="closeInputArea" v-if="closed == false">入力欄を閉じる</p>
+								<div class="inputArea">
+									<p>Comment</p>
+									<textarea name="comment" v-model="inputs.comment"></textarea>
+								</div>
+								<div class="inputArea">
+									<p>Deadline</p>
+									<input type="date" name="deadline" v-model="inputs.deadline">
+								</div>
+								<div class="inputArea">
+									<p>Date</p>
+									<input type="date" name="date" v-model="inputs.date">
+									<span>*required</span>  <span class="red_message">{{ err.dateErr }}</span>
+								</div>
+								<input type="hidden" name="tmp_token" v-model="inputs.tmp_token">
+								<div class="buttonArea">
+									<button type="submit" class="button">登録</button>
+								</div>
+							</form>
+						</div>
+					</transition>
+					<p class="register_button" v-on:click="closeInputArea" v-if="closed == false">入力欄を閉じる</p>
+				</article>
+
+				<a href="./mypage.php"><p class="register_button">貸し借りの合計を相手ごとに確認する</p></a>
+
 				<article class="money_record">
 					<?php if($money){ ?>
 
