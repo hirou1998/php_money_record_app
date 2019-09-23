@@ -36,7 +36,7 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 
 		<section class="top_content">
 			<h1>Money Record</h1>
-			<p>世界中のどこでも、お金の貸し借りをラクラク管理<br>どんな通貨の貸し借りもMY通貨に自動計算</p>
+			<p>世界中のどこでも、<br>お金の貸し借りをラクラク管理<br>どんな通貨の貸し借りもMY通貨に自動計算</p>
 		</section>
 
 		<?php
