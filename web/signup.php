@@ -13,12 +13,10 @@ if(isset($_SESSION['login'])){
 		<section class="top_content">
 			<h1>Sign up</h1>
 			<p>簡単5項目のユーザー登録でお金の貸し借りの管理を簡単に</p>
+			<p>パスワードはハッシュして登録しています。<br>メールアドレスはフォーマットが正しければどんなものでも構いません。</p>
 		</section>
 		<section>
 			<form v-on:submit="validation">
-				<!-- <input-part :type="textType" :name="username" :model="inputs.username" :required="required" :err="err.usernameErr"></input-part>
-				<input-part :type="passwordType" :name="password" :model="inputs.password" :required="required" :err="err.passwordErr"></input-part>
-				<input-part :type="passwordType" :name="username" :model="inputs.username" :required="required" :err="err.usernameErr"></input-part> -->
 				<div class="inputArea">
 					<p>User name</p>
 					<input type="text" name="username" v-model="inputs.username">
