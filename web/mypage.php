@@ -18,9 +18,12 @@ require_once './model/moneyModel.php';
 $moneymodel = new MoneyModel();
 $records = $moneymodel->getAllRecordsBasedOnPerson($userid, $profile['currency']);
 $personsLIst = $moneymodel->getPersonsList($userid);
+$idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCAPED_UNICODE);
 ?>
 <body>
 	<div id="wrapper" class="wrapper">
+		<section>
+		</section>
 		<section class="top_content">
 			<h1>My Page</h1>
 			<article class="profile">
@@ -54,26 +57,83 @@ $personsLIst = $moneymodel->getPersonsList($userid);
 							<?php echo $profile['currency']; ?></span>
 						</li>
 						<div class="see_more_button" v-on:click="showMoreRecords('<?php echo $personsLIst[$num]; ?>')" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?> == false">すべて表示</div>
-						<?php foreach ($record as $key => $item) { ?>
-							<?php if($key == 0){ ?>
-								<ul class="record_list">
-								<?php foreach($item as $key => $value){ ?>						
-									<li><span class="key"><?php echo $key; ?></span><span class="value"><?php echo $value; ?></span></li>
-								<?php } ?>
-								</ul>
+						<?php foreach ($record as $index => $item) { ?>
+							<?php if($index == 0){ ?>
+
+								<form v-on:submit.prevent="changeToSettled(idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>])">
+									<?php if($item['type'] == "借り"){ ?>
+									<ul class="record_list borrow">
+									<?php }else{ ?>
+									<ul class="record_list lend">
+									<?php } ?>
+
+										<?php foreach($item as $key => $value){ ?>
+											<?php if($key == "id"){ ?>
+											<input type="hidden" name="id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
+											<?php }else{ ?>					
+											<li>
+												<span class="key"><?php echo $key; ?></span>
+												<?php if($value != null){ ?>
+													<span class="value"><?php echo $value; ?></span>
+												<?php }else{ ?>
+													<span class="value">-</span>
+												<?php } ?>
+											</li>
+											<?php } ?>
+										<?php } ?>
+										<li class="settled_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
+									</ul>
+								</form>
 							<?php }else{ ?>
 								<transition name="fade">
-									<ul class="record_list" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">	
-									<?php foreach($item as $key => $value){ ?>					
-										<li><span class="key"><?php echo $key; ?></span><span class="value"><?php echo $value; ?></span></li>
-									<?php } ?>
-									</ul>
+									<form v-on:submit.prevent="changeToSettled(idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>])">
+										<ul class="record_list" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">	
+											<?php foreach($item as $key => $value){ ?>
+												<?php if($key == "id"){ ?>
+												<input type="hidden" name="id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
+												<?php }else{ ?>					
+												<li>
+													<span class="key"><?php echo $key; ?></span>
+													<?php if($value != null){ ?>
+														<span class="value"><?php echo $value; ?></span>
+													<?php }else{ ?>
+														<span class="value">-</span>
+													<?php } ?>
+												</li>
+												<?php } ?>
+											<?php } ?>
+											<li class="settled_button"><button type="submit" class="settled_button">清算済にする</button></li>
+										</ul>
+									</form>
 								</transition>
 							<?php } ?>
 						<?php } ?>
 					</ul>
 				<?php } ?>
 			</article>
+			<transition name="modal">
+				<div v-if="settledModalShow" class="modal_over_lay" v-on:click="closeModal">
+					<div class="close_button">×</div>
+					<div class="modal_content" v-on:click.stop >
+						<api-loading v-if="loading"></api-loading>
+						<form v-on:submit.prevent="sendChange" v-else>
+							<p class="alert">以下のデータを清算済にしていいですか?</p>
+							<ul class="record_list">
+								<li><span class="key">Type</span><span>{{preview.type}}</span></li>
+								<li><span class="key">Person</span><span>{{preview.person}}</span></li>
+								<li><span class="key">Status</span><span>{{preview.status}}</span></li>
+								<li><span class="key">Amount</span><span>{{preview.amount}}</span></li>
+								<li><span class="key">Currency</span><span>{{preview.currency}}</span></li>
+								<li><span class="key">Comment</span><span>{{preview.comment}}</span></li>
+								<li><span class="key">Deadline</span><span>{{preview.deadline}}</span></li>
+							</ul>
+							<div class="buttonArea">
+								<button class="button" type="submit">変更</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</transition>
 		</section>
 	</div>
 </body>
@@ -88,11 +148,67 @@ new Vue({
 			<?php foreach ($personsLIst as $key => $value){ ?>
 				<?php echo $value; ?>: false,
 			<?php } ?>
-		}
+		},
+		tmp_token: '<?php echo $_SESSION['tmp_token']; ?>',
+		settledModalShow: false,
+		preview: {
+			id: null,
+			type: null,
+			person: null,
+			status: null,
+			amount: null,
+			currency: null,
+			comment: null,
+			deadline: null
+		},
+		loading: false,
+		idList: 
+			<?php echo $idList; ?>
 	},
 	methods: {
 		showMoreRecords: function(person){
 			this.$set(this.recordsVisibility, person, true);
+		},
+		changeToSettled: function(record_id){
+			let vm = this;
+			this.loading = true;
+			axios.post('./controller/change_to_settled.php', {
+				id: record_id,
+				tmp_token: vm.tmp_token,
+				change: false
+			})
+			.then(function(res){
+				console.log(res.data);
+				for(key in res.data){
+					vm.$set(vm.preview, key, res.data[key]);
+				}
+				vm.loading = false;
+			})
+			.catch(function(err){
+				console.log(err);
+			});
+		},
+		showSettledModal: function(){
+			this.settledModalShow = true;
+		},
+		closeModal: function(){
+			this.settledModalShow = false;
+		},
+		sendChange: function(){
+			let vm = this;
+			axios.post('./controller/change_to_settled.php', {
+				id: vm.preview.id,
+				tmp_token: vm.tmp_token,
+				change: true
+			})
+			.then(function(res){
+				console.log(res.data);
+				let url = location.href;
+				location.href = url;
+			})
+			.catch(function(err){
+				console.log(err);
+			});
 		}
 	}
 })

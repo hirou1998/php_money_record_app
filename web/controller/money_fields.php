@@ -3,6 +3,8 @@ session_start();
 $data = file_get_contents('php://input');
 $decoded = json_decode($data, true);
 
+var_dump($_SESSION['tmp_token'] != $decoded['tmp_token']);
+
 if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['tmp_token']){
 	$url = '../index.php';
 	header('Location: ' . $url);

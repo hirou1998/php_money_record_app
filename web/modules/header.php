@@ -45,7 +45,7 @@ $url = $_SERVER['REQUEST_URI'];
 	</ul>
 </nav>
 
-<div id="loading">
+<div id="loading" class="loading">
 	<div class="loading_content">
 		<span class="circle first_circle"></span>
 		<span class="circle second_circle"></span>

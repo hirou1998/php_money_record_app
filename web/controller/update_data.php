@@ -5,6 +5,8 @@ $decoded = json_decode($data, true);
 require_once '../model/moneyModel.php';
 $moneymodel = new MoneyModel();
 
+//var_dump($_SESSION['tmp_token'] != $decoded['tmp_token']);
+
 if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['tmp_token']){
 	//CSRF
 

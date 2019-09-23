@@ -5,3 +5,7 @@ $(window).on('load', function(){
 		$("#loading").css("display", 'none');
 	}, 1000)
 });
+
+Vue.component('api-loading', {
+	template: '<div class="api_loading"><span class="loader"></span></div>'
+});

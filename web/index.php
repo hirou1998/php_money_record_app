@@ -158,7 +158,8 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 							<div v-if="editModalShow" class="modal_over_lay" v-on:click="closeModal">
 								<div class="close_button">×</div>
 								<div class="modal_content" v-on:click.stop >
-									<form v-on:submit.prevent="sendUpdate">
+									<api-loading v-if="loading"></api-loading>
+									<form v-on:submit.prevent="sendUpdate" v-else>
 										<div class="inputArea">
 											<p>type</p>
 											<select type="select" name="type" v-model="edit.type">
@@ -227,7 +228,8 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 							<div v-if="deleteModalShow" class="modal_over_lay" v-on:click="closeModal">
 								<div class="close_button">×</div>
 								<div class="modal_content" v-on:click.stop >
-									<form v-on:submit.prevent="sendDelete">
+									<api-loading v-if="loading"></api-loading>
+									<form v-on:submit.prevent="sendDelete" v-else>
 										<p class="alert">本当に削除してもいいですか?</p>
 										<ul class="record_list">
 											<li><span class="key">Type</span><span>{{edit.type}}</span></li>
@@ -304,15 +306,16 @@ new Vue({
 			deadline: null,
 			updated: true,
 			delete: false,
-			tmp_token: '<?php echo $_SESSION["tmp_token"]; ?>'
+			tmp_token: '<?php echo $_SESSION['tmp_token']; ?>'
 		},
 		postData: {
 			record_id: <?php echo $ids; ?>,
-			tmp_token: '<?php echo $_SESSION["tmp_token"]; ?>'
+			tmp_token: '<?php echo $_SESSION['tmp_token']; ?>'
 		},
 		editModalShow: false,
 		deleteModalShow: false,
-		current_record_id: null
+		current_record_id: null,
+		loading: false
 	},
 	methods:{
 		deleteMessage: function(){
@@ -378,6 +381,7 @@ new Vue({
 		updateData: function(num){
 			let vm = this;
 			this.current_record_id = this.postData.record_id[num];
+			this.loading = true;
 			axios.post('./controller/update_data.php', {
 				record_id: vm.postData.record_id[num],
 				tmp_token: vm.postData.tmp_token,
@@ -389,6 +393,7 @@ new Vue({
 				for(key in res.data){
 					vm.$set(vm.edit, key, res.data[key]);
 				}
+				vm.loading = false;
 			})
 			.catch(function(err){
 				console.log(err);
@@ -396,9 +401,11 @@ new Vue({
 		},
 		sendUpdate: function(){
 			let vm = this;
+			this.loading = true;
 			axios.post('./controller/update_data.php', vm.edit)
 			.then(function(res){
 				console.log(res.data);
+				vm.loading = false;
 				let url = location.href;
 				location.href = url;
 			})
@@ -408,6 +415,7 @@ new Vue({
 		},
 		sendDelete: function(){
 			let vm = this;
+			this.loading = true;
 			axios.post('./controller/update_data.php', {
 				record_id: vm.current_record_id,
 				tmp_token: vm.postData.tmp_token,
@@ -416,6 +424,7 @@ new Vue({
 			})
 			.then(function(res){
 				console.log(res.data);
+				vm.loading = false;
 				let url = location.href;
 				location.href = url;
 			})
