@@ -10,7 +10,7 @@ $url = $_SERVER['REQUEST_URI'];
 <head>
 	<title><?php echo $title; ?></title>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
 	<link rel="stylesheet" type="text/css" href="./css/style_pc.css" media="screen and (min-width: 801px)">
 	<link rel="stylesheet" type="text/css" href="./css/style_sp.css" media="screen and (max-width: 800px)">
 	<link href="https://fonts.googleapis.com/css?family=Kosugi+Maru&display=swap" rel="stylesheet">
