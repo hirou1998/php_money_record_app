@@ -87,7 +87,11 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 							<?php }else{ ?>
 								<transition name="fade">
 									<form v-on:submit.prevent="changeToSettled(idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>])">
-										<ul class="record_list" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">	
+										<?php if($item['type'] == "借り"){ ?>
+										<ul class="record_list borrow" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">
+										<?php }else{ ?>
+										<ul class="record_list lend" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">
+										<?php } ?>	
 											<?php foreach($item as $key => $value){ ?>
 												<?php if($key == "id"){ ?>
 												<input type="hidden" name="id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
