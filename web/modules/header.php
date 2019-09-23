@@ -28,7 +28,7 @@ $url = $_SERVER['REQUEST_URI'];
 		<?php
 			if($isLoggedIn){
 				if(strpos($url, 'mypage')){
-					echo "<li class='nav_button'><a href='information.php'>Change user info</a></li>";
+					//echo "<li class='nav_button'><a href='information.php'>Change user info</a></li>";
 					echo "<li class='nav_button'><a href='logout.php'>Log out</a></li>";
 				}
 				if(strpos($url, 'logout')){
