@@ -29,14 +29,20 @@ $personsList = $moneymodel->getPersonsList($userid);
 $ids = json_encode($moneymodel->getRecordId($userid));
 ?>
 <body>
+	<?php if (empty($_SESSION['username'])){ ?>
+	<div id="wrapper" class="wrapper wrapper_none top_wrapper">
+	<?php }else{ ?>
 	<div id="wrapper" class="wrapper wrapper_none">
+	<?php } ?>
 		<?php if($logout){ ?>
 			<p class="alert" v-if="notDeleted">ログアウトしました。<span v-on:click="deleteMessage">×</span></p>
 		<?php } ?>
 
 		<section class="top_content">
-			<h1>Money Record</h1>
-			<p>世界中のどこでも、<br>お金の貸し借りをラクラク管理<br>どんな通貨の貸し借りもMY通貨に自動計算</p>
+			<div class="top_main">
+				<h1>Money Record</h1>
+				<p class="copy">世界中のどこでも、<br>お金の貸し借りをラクラク管理<br>どんな通貨の貸し借りもMY通貨に自動計算</p>
+			</div>
 		</section>
 
 		<?php
