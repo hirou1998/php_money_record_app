@@ -19,10 +19,16 @@ if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['t
 	$deadline = $decoded['deadline'];
 	$date = $decoded['date'];
 
+	if($status == "未清算"){
+		$status_number = 0;
+	}else{
+		$status_number = 1;
+	}
+
 	require_once '../model/moneyModel.php';
 	$moneymodel = new MoneyModel();
 
-	$moneymodel->registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline, $date);
+	$moneymodel->registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline, $date, $status_number);
 
 	echo json_encode($decoded, true);
 }
