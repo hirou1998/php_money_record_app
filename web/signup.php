@@ -60,13 +60,13 @@ if(isset($_SESSION['login'])){
 		<section v-if="submitted">
 			<form method="post" action="<?php echo htmlspecialchars('confirm.php'); ?>">
 				<div class="inputData">
-					<p>Username: {{ response.username }}</p>
+					<p>ユーザー名: {{ response.username }}</p>
 					<input type="hidden" name="username" v-model="response.username">
-					<p>Password: {{ response.password }}</p>
+					<p>パスワード: {{ response.password }}</p>
 					<input type="hidden" name="hash" v-model="response.hash">
-					<p>Email: {{ response.email }}</p>
+					<p>メールアドレス: {{ response.email }}</p>
 					<input type="hidden" name="email" v-model="response.email">
-					<p>Sex: {{ response.sex }}</p>
+					<p>性別: {{ response.sex }}</p>
 					<input type="hidden" name="sex" v-model="response.sex">
 				</div>
 				<div class="buttonArea">
