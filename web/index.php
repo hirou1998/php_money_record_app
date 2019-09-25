@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <?php
+date_default_timezone_set('Asia/Tokyo');
 //require('../vendor/autoload.php');
 $refer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 if(strpos($refer, 'logout') != false){
