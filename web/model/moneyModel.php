@@ -58,9 +58,10 @@ class MoneyModel{
 	}
 
 	public function getMoneyRecord($userid){
-		$sql = "SELECT id, type, person, status, amount, currency, comment, deadline, reg_date FROM money_record WHERE user_id = :userid ORDER BY id DESC" ;
+		$sql = "SELECT id, type, person, status, amount, currency, comment, deadline, reg_date FROM money_record WHERE user_id = :userid AND archive = :archive ORDER BY id DESC" ;
 		$arr = array(
-			':userid' => $userid
+			':userid' => $userid,
+			':archive' => 0
 		);
 		$result = $this->dao->selectMultipulData($sql, $arr);
 
