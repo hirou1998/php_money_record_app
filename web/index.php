@@ -243,13 +243,13 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 									<form v-on:submit.prevent="sendDelete" v-else>
 										<p class="alert">本当に削除してもいいですか?</p>
 										<ul class="record_list">
-											<li><span class="key">Type</span><span>{{edit.type}}</span></li>
-											<li><span class="key">Person</span><span>{{edit.person}}</span></li>
-											<li><span class="key">Status</span><span>{{edit.status}}</span></li>
-											<li><span class="key">Amount</span><span>{{edit.amount}}</span></li>
-											<li><span class="key">Currency</span><span>{{edit.currency}}</span></li>
-											<li><span class="key">Comment</span><span>{{edit.comment}}</span></li>
-											<li><span class="key">Deadline</span><span>{{edit.deadline}}</span></li>
+											<li><span class="type value">{{edit.type}}</span></li>
+											<li><span class="key">相手</span><span class="value">{{edit.person}}</span></li>
+											<li><span class="status">{{edit.status}}</span></li>
+											<li><span class="key">金額</span><span class="value">{{edit.amount}}</span></li>
+											<li><span class="key">通貨</span><span class="value">{{edit.currency}}</span></li>
+											<li><span class="key">内容</span><span class="value">{{edit.comment}}</span></li>
+											<li><span class="key">締切</span><span class="value">{{edit.deadline}}</span></li>
 										</ul>
 										<div class="buttonArea">
 											<button class="button" type="submit">削除</button>

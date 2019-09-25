@@ -7,22 +7,22 @@ include './modules/header.php';
 <body>
 	<div id="wrapper" class="wrapper">
 		<section class="top_content">
-			<h1>Log in</h1>
+			<h1>ログイン</h1>
 		</section>
 		<section>
 			<form v-on:submit="validation">
 				<div class="inputArea">
-					<p>Username</p>
+					<p>ユーザー名</p>
 					<input type="text" name="username" v-model="inputs.username">
-					<span>*required {{errs.usernameErr}}</span>
+					<span>*必須 {{errs.usernameErr}}</span>
 				</div>
 				<div class="inputArea">
-					<p>Password</p>
+					<p>パスワード</p>
 					<input type="password" name="password" v-model="inputs.password">
-					<span>*required {{errs.passwordErr}}</span>
+					<span>*必須 {{errs.passwordErr}}</span>
 				</div>
 				<div class="buttonArea">
-					<button class="button" type="submit">Log In</button>
+					<button class="button" type="submit">ログイン</button>
 				</div>
 			</form>
 		</section>
@@ -54,11 +54,11 @@ new Vue({
 			this.isErr = false;
 			this.message = this.loggedIn = null;
 			if(!this.inputs.username){
-				this.errs.usernameErr = "Username is required";
+				this.errs.usernameErr = "ユーザー名が必要です。";
 				this.isErr = true;
 			}
 			if(!this.inputs.password){
-				this.errs.passwordErr = "Password is required";
+				this.errs.passwordErr = "パスワードが必要です。";
 				this.isErr = true;
 			}
 			if(this.isErr == false){
