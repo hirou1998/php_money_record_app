@@ -11,7 +11,9 @@ if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['t
 	require_once '../model/userModel.php';
 	$usermodel = new UserModel();
 
-	$usermodel->saveUserProfile($decoded['username'], $decoded['currency'], $userid);
+	$username = $usermodel->testInput($decoded['username']);
+
+	$usermodel->saveUserProfile($username, $decoded['currency'], $userid);
 
 	$result = $usermodel->getUserProfile($userid);
 

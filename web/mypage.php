@@ -61,10 +61,14 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 							<?php if($index == 0){ ?>
 
 								<form v-on:submit.prevent="changeToSettled(idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>])">
-									<?php if($item['type'] == "借り"){ ?>
-									<ul class="record_list borrow">
+									<?php if($item['status'] == "未清算"){ ?>
+										<?php if($item['type'] == "借り"){ ?>
+										<ul class="record_list borrow">
+										<?php }else{ ?>
+										<ul class="record_list lend">
+										<?php } ?>
 									<?php }else{ ?>
-									<ul class="record_list lend">
+										<ul class="record_list settled">
 									<?php } ?>
 
 										<?php foreach($item as $key => $value){ ?>
@@ -81,17 +85,25 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 											</li>
 											<?php } ?>
 										<?php } ?>
-										<li class="settled_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
+										<?php if($item['status'] == "未清算"){ ?>
+											<li class="settled_button mypage_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
+										<?php }else{ ?>
+											<li class="delete_button mypage_button"><button type="submit" v-on:click="showDeleteModal">削除する</button></li>
+										<?php } ?>
 									</ul>
 								</form>
 							<?php }else{ ?>
 								<transition name="fade">
 									<form v-on:submit.prevent="changeToSettled(idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>])">
-										<?php if($item['type'] == "借り"){ ?>
-										<ul class="record_list borrow" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">
-										<?php }else{ ?>
-										<ul class="record_list lend" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">
-										<?php } ?>	
+										<?php if($item['status'] == "未清算"){ ?>
+											<?php if($item['type'] == "借り"){ ?>
+												<ul class="record_list borrow" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">
+												<?php }else{ ?>
+												<ul class="record_list lend" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">
+												<?php } ?>	
+											<?php }else{ ?>
+											<ul class="record_list settled" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">
+										<?php } ?>
 											<?php foreach($item as $key => $value){ ?>
 												<?php if($key == "id"){ ?>
 												<input type="hidden" name="id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
@@ -106,7 +118,11 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 												</li>
 												<?php } ?>
 											<?php } ?>
-											<li class="settled_button"><button type="submit" class="settled_button">清算済にする</button></li>
+											<?php if($item['status'] == "未清算"){ ?>
+												<li class="settled_button mypage_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
+											<?php }else{ ?>
+												<li class="delete_button mypage_button"><button type="submit" v-on:click="showDeleteModal">削除する</button></li>
+											<?php } ?>
 										</ul>
 									</form>
 								</transition>
@@ -138,6 +154,30 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 					</div>
 				</div>
 			</transition>
+
+			<transition name="modal">
+				'<div v-if="deleteModalShow" class="modal_over_lay" v-on:click="closeModal">
+					<div class="close_button">×</div>
+					<div class="modal_content" v-on:click.stop >
+						<api-loading v-if="loading"></api-loading>
+						<form v-on:submit.prevent="sendDelete" v-else>
+							<p class="alert">本当に削除してもいいですか?</p>
+							<ul class="record_list">
+								<li><span class="key">Type</span><span>{{preview.type}}</span></li>
+								<li><span class="key">Person</span><span>{{preview.person}}</span></li>
+								<li><span class="key">Status</span><span>{{preview.status}}</span></li>
+								<li><span class="key">Amount</span><span>{{preview.amount}}</span></li>
+								<li><span class="key">Currency</span><span>{{preview.currency}}</span></li>
+								<li><span class="key">Comment</span><span>{{preview.comment}}</span></li>
+								<li><span class="key">Deadline</span><span>{{preview.deadline}}</span></li>
+							</ul>
+							<div class="buttonArea">
+								<button class="button" type="submit">削除</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</transition>'
 		</section>
 	</div>
 </body>
@@ -155,6 +195,7 @@ new Vue({
 		},
 		tmp_token: '<?php echo $_SESSION['tmp_token']; ?>',
 		settledModalShow: false,
+		deleteModalShow: false,
 		preview: {
 			id: null,
 			type: null,
@@ -194,9 +235,15 @@ new Vue({
 		},
 		showSettledModal: function(){
 			this.settledModalShow = true;
+			this.deleteModalShow = false;
+		},
+		showDeleteModal: function(){
+			this.settledModalShow = false;
+			this.deleteModalShow = true;
 		},
 		closeModal: function(){
 			this.settledModalShow = false;
+			this.deleteModalShow = false;
 		},
 		sendChange: function(){
 			let vm = this;
@@ -207,6 +254,24 @@ new Vue({
 			})
 			.then(function(res){
 				console.log(res.data);
+				let url = location.href;
+				location.href = url;
+			})
+			.catch(function(err){
+				console.log(err);
+			});
+		},
+		sendDelete: function(){
+			let vm = this;
+			axios.post('./controller/update_data.php', {
+				record_id: vm.preview.id,
+				tmp_token: vm.tmp_token,
+				updated: false,
+				delete: true
+			})
+			.then(function(res){
+				console.log(res.data);
+				vm.loading = false;
 				let url = location.href;
 				location.href = url;
 			})

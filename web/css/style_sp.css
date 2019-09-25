@@ -296,6 +296,9 @@ h1{
 .borrow{
 	background: rgba(255, 185, 185, 0.84);
 }
+.settled{
+	background: rgba(129, 129, 129, 0.84);
+}
 .record_list li{
 	display: flex;
 }
@@ -370,13 +373,19 @@ h1{
 .top_row span.title{
 	font-weight: bold;
 }
-.settled_button{
+.mypage_button{
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	margin: 4vw 0 0;
 }
 .settled_button button{
+	background: #074b81;
+    color: white;
+    padding: 2vw;
+    border-radius: 1vw;
+}
+.delete_button button{
 	background: #074b81;
     color: white;
     padding: 2vw;

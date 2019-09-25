@@ -112,7 +112,7 @@ class MoneyModel{
 	}
 
 	public function getRecordIdBasedOnPerson($userid, $person){
-		$sql = 'SELECT id FROM money_record WHERE user_id = :userid AND person = :person ORDER BY id DESC';
+		$sql = 'SELECT id FROM money_record WHERE user_id = :userid AND person = :person ORDER BY status_number ASC, id DESC';
 		$arr = array(
 			':userid' => $userid,
 			':person' => $person
@@ -140,7 +140,7 @@ class MoneyModel{
 	}
 
 	public function getRecordBasedOnPerson($userid, $person){
-		$sql = 'SELECT id, type, status, amount, currency, comment, deadline, reg_date FROM money_record WHERE user_id = :userid AND person = :person ORDER BY id DESC';
+		$sql = 'SELECT id, type, status, amount, currency, comment, deadline, reg_date FROM money_record WHERE user_id = :userid AND person = :person ORDER BY status_number ASC, id DESC';
 		$arr = array(
 			':userid' => $userid,
 			':person' => $person
@@ -230,9 +230,10 @@ class MoneyModel{
 	}
 
 	public function changeToSettled($id){
-		$sql = "UPDATE money_record SET status = :status WHERE id = :id";
+		$sql = "UPDATE money_record SET status = :status, status_number = :status_number WHERE id = :id";
 		$arr = array(
 			":status" => "清算済",
+			":status_number" => 1,
 			":id" => $id
 		);
 		$this->dao->update($sql, $arr);
