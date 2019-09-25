@@ -11,43 +11,49 @@ if(isset($_SESSION['login'])){
 <body>
 	<div id="wrapper" class="wrapper">
 		<section class="top_content">
-			<h1>Sign up</h1>
+			<h1>ユーザー登録</h1>
 			<p>簡単5項目のユーザー登録でお金の貸し借りの管理を簡単に</p>
-			<p>パスワードはハッシュして登録しています。<br>メールアドレスはフォーマットが正しければどんなものでも構いません。</p>
+			<p>パスワードは暗号化して登録しています。</p>
 		</section>
 		<section>
 			<form v-on:submit="validation">
 				<div class="inputArea">
-					<p>User name</p>
+					<p>ユーザー名</p>
 					<input type="text" name="username" v-model="inputs.username">
-					<span>*required</span>  <span class="red_message">{{ err.usernameErr }}</span>
+					<span>*必須</span>  <span class="red_message">{{ err.usernameErr }}</span>
 				</div>
 				<div class="inputArea">
-					<p>Password</p>
+					<p>パスワード</p>
 					<input type="password" name="password" v-model="inputs.password">
-					<span>*required</span>  <span class="red_message">{{ err.passwordErr }}</span>
+					<span>*必須</span>  <span class="red_message">{{ err.passwordErr }}</span>
 				</div>
 				<div class="inputArea">
-					<p>Password (check)</p>
+					<p>パスワード (確認用)</p>
 					<input type="password" name="password_check" v-model="inputs.password_check">
-					<span>*required</span>  <span class="red_message">{{ err.password_checkErr }}</span>
+					<span>*必須</span>  <span class="red_message">{{ err.password_checkErr }}</span>
 				</div>
 				<div class="inputArea">
-					<p>Email</p>
+					<p>メールアドレス</p>
 					<input type="email" name="email" v-model="inputs.email">
-					<span>*required</span>  <span class="red_message">{{ err.emailErr }}</span>
+					<span>*必須</span>  <span class="red_message">{{ err.emailErr }}</span>
 				</div>
-				<div class="inputArea">
-					<p>Sex</p>
-					<select type="select" name="sex" v-model="inputs.sex">
+				<div class="checkArea inputArea">
+					<p>性別</p>
+					<input id="radio_male" type="radio" name="sex" value="male" v-model="inputs.sex" v-on:change="changeOption">
+					<label class="check_label" for="radio_male">男性</label>
+					<input id="radio_female" type="radio" name="sex" value="female" v-model="inputs.sex" v-on:change="changeOption">
+					<label class="check_label" for="radio_female">女性</label>
+					<input id="radio_other" type="radio" name="sex" value="other" v-model="inputs.sex" v-on:change="changeOption">
+					<label class="check_label" for="radio_other">その他</label>
+					<!-- <select type="select" name="sex" v-model="inputs.sex">
 						<option value="male">Male</option>
 						<option value="female">Female</option>
 						<option value="other">Other</option>
-					</select>
-					<span>*required</span>  <span class="red_message">{{ err.sexErr }}</span>
+					</select> -->
+					<span>*必須</span>  <span class="red_message">{{ err.sexErr }}</span>
 				</div>
 				<div class="buttonArea">
-					<button type="submit" class="button">Sign Up</button>
+					<button type="submit" class="button">ユーザー登録</button>
 				</div>
 			</form>
 		</section>
@@ -68,6 +74,7 @@ if(isset($_SESSION['login'])){
 				</div>
 			</form>
 		</section>
+		<api-loading v-if="loading"></api-loading>
 	</div>
 </body>
 </html>
@@ -101,7 +108,7 @@ new Vue({
 			password: null,
 			password_check: null,
 			email: null,
-			sex: 'female'
+			sex: 'male'
 		},
 		err: {
 			usernameErr: null,
@@ -118,11 +125,20 @@ new Vue({
 			email: "",
 			sex: ""
 		},
-		submitted: false
+		submitted: false,
+		select: true,
+		loading: false
 	},
 	methods: {
 		resetErr: function(){
 			this.err.usernameErr = this.err.passwordErr = this.err.password_checkErr = this.err.emailErr = this.err.sexErr = null;
+		},
+		changeOption: function(e){
+			if(e.target.value == 'select'){
+				this.select = true;
+			}else{
+				this.select = false;
+			}
 		},
 		validation: function(e){
 			this.isErr = false;
@@ -150,17 +166,20 @@ new Vue({
 			}
 			if(this.isErr == false){
 				let vm = this;
+				this.loading = true;
 				axios.post('./controller/input_check.php', vm.inputs)
 				.then(function(res){
 					if(res.data['usernameErr'] != null || res.data['emailErr'] != null){
 						for(key in res.data){
 							vm.$set(vm.err, key, res.data[key]);
 						}
+						this.loading = false;
 					}else{
 						for(key in res.data){
 							vm.$set(vm.response, key, res.data[key]);
 						}
 						vm.submitted = true;
+						this.loading = false;
 					}
 				})
 				.catch(function(err){

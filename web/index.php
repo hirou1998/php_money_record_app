@@ -270,8 +270,8 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 
 		<?php }else{
 			echo '<section class="button_area">
-					<a href="login.php"><div class="top_button signin_button"><p>Sign In</p></div></a>
-					<a href="signup.php"><div class="top_button signup_button"><p>Sign Up</p></div></a>
+					<a href="login.php"><div class="top_button signin_button"><p>ログイン</p></div></a>
+					<a href="signup.php"><div class="top_button signup_button"><p>ユーザー登録</p></div></a>
 				  </section>';
 		}
 		?>
