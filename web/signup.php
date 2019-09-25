@@ -173,14 +173,13 @@ new Vue({
 						for(key in res.data){
 							vm.$set(vm.err, key, res.data[key]);
 						}
-						this.loading = false;
 					}else{
 						for(key in res.data){
 							vm.$set(vm.response, key, res.data[key]);
 						}
 						vm.submitted = true;
-						this.loading = false;
 					}
+					this.loading = false;
 				})
 				.catch(function(err){
 					console.log(err);
