@@ -5,7 +5,8 @@ $decoded = json_decode($data, true);
 require_once '../model/moneyModel.php';
 $moneymodel = new MoneyModel();
 
-//var_dump($_SESSION['tmp_token'] != $decoded['tmp_token']);
+var_dump($decoded['archive']);
+var_dump($decoded['delete']);
 
 if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['tmp_token']){
 	//CSRF
@@ -31,6 +32,11 @@ if($_SERVER['REQUEST_METHOD'] != 'POST' || $_SESSION['tmp_token'] != $decoded['t
 
 	$id = $decoded['record_id'];
 	$moneymodel->deleteMoneyRecord($id);
+
+}elseif($decoded['archive'] == true){
+
+	$id = $decoded['record_id'];
+	$moneymodel->archiveRecord($id);
 
 }else{
 	//when this file is called for the first time

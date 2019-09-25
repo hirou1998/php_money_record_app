@@ -317,6 +317,7 @@ new Vue({
 			deadline: null,
 			updated: true,
 			delete: false,
+			archive: false,
 			tmp_token: '<?php echo $_SESSION['tmp_token']; ?>'
 		},
 		postData: {
@@ -397,7 +398,8 @@ new Vue({
 				record_id: vm.postData.record_id[num],
 				tmp_token: vm.postData.tmp_token,
 				updated: false,
-				delete: false
+				delete: false,
+				archive: false
 			})
 			.then(function(res){
 				console.log(res.data);
@@ -431,7 +433,8 @@ new Vue({
 				record_id: vm.current_record_id,
 				tmp_token: vm.postData.tmp_token,
 				updated: false,
-				delete: true
+				delete: true,
+				archive: false
 			})
 			.then(function(res){
 				console.log(res.data);

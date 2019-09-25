@@ -88,7 +88,7 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 										<?php if($item['status'] == "未清算"){ ?>
 											<li class="settled_button mypage_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
 										<?php }else{ ?>
-											<li class="delete_button mypage_button"><button type="submit" v-on:click="showDeleteModal">削除する</button></li>
+											<li class="delete_button mypage_button"><button type="submit" v-on:click="showDeleteModal">アーカイブする</button></li>
 										<?php } ?>
 									</ul>
 								</form>
@@ -121,7 +121,7 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 											<?php if($item['status'] == "未清算"){ ?>
 												<li class="settled_button mypage_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
 											<?php }else{ ?>
-												<li class="delete_button mypage_button"><button type="submit" v-on:click="showDeleteModal">削除する</button></li>
+												<li class="delete_button mypage_button"><button type="submit" v-on:click="showDeleteModal">アーカイブする</button></li>
 											<?php } ?>
 										</ul>
 									</form>
@@ -160,8 +160,8 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 					<div class="close_button">×</div>
 					<div class="modal_content" v-on:click.stop >
 						<api-loading v-if="loading"></api-loading>
-						<form v-on:submit.prevent="sendDelete" v-else>
-							<p class="alert">本当に削除してもいいですか?</p>
+						<form v-on:submit.prevent="sendArchive" v-else>
+							<p class="alert">アーカイブしてもいいですか?</p>
 							<ul class="record_list">
 								<li><span class="key">Type</span><span>{{preview.type}}</span></li>
 								<li><span class="key">Person</span><span>{{preview.person}}</span></li>
@@ -172,7 +172,7 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 								<li><span class="key">Deadline</span><span>{{preview.deadline}}</span></li>
 							</ul>
 							<div class="buttonArea">
-								<button class="button" type="submit">削除</button>
+								<button class="button" type="submit">アーカイブ</button>
 							</div>
 						</form>
 					</div>
@@ -261,13 +261,14 @@ new Vue({
 				console.log(err);
 			});
 		},
-		sendDelete: function(){
+		sendArchive: function(){
 			let vm = this;
 			axios.post('./controller/update_data.php', {
 				record_id: vm.preview.id,
 				tmp_token: vm.tmp_token,
 				updated: false,
-				delete: true
+				delete: false,
+				archive: true
 			})
 			.then(function(res){
 				console.log(res.data);
