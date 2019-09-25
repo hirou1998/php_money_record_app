@@ -179,7 +179,7 @@ new Vue({
 						}
 						vm.submitted = true;
 					}
-					this.loading = false;
+					vm.loading = false;
 				})
 				.catch(function(err){
 					console.log(err);
