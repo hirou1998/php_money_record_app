@@ -14,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	require_once './model/userModel.php';
 	$usermodel = new usermodel();
 
-	$username = $_POST['username'];
-	$password = $_POST['hash'];
-	$email = $_POST['email'];
-	$sex = $_POST['sex'];
+	$username = $usermodel->testInput($_POST['username']);
+	$password = $usermodel->testInput($_POST['hash']);
+	$email = $usermodel->testInput($_POST['email']);
+	$sex = $usermodel->testInput($_POST['sex']);
 
 	if($usermodel->insertUser($username, $password, $email, $sex) == null){
 		$usermodel->loginUser($username, $password);
