@@ -70,8 +70,52 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 									<?php }else{ ?>
 										<ul class="record_list settled">
 									<?php } ?>
+											<input type="hidden" name="record_id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
+											<li class="single_value">
+												<span class="value type"><?php echo $item['type']; ?></span>
+											</li>
+											<li>
+												<span class="key">
+													<span>
+														<?php include './modules/svg/person_icon.php'; ?>
+													</span>
+												相手</span>
+												<span class="value"><?php echo $item['person']; ?></span>
+											</li>
+											<li>
+												<span class="key">
+													<span>
+														<?php include './modules/svg/amount_icon.php'; ?>
+													</span>
+												金額</span>
+												<span class="value"><?php echo $item['amount']; ?></span>
+											</li>
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/currency_icon.php'; ?></span>
+												通貨</span>
+												<span class="value"><?php echo $item['currency']; ?></span>
+											</li>
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/comment_icon.php'; ?></span>
+												内容</span>
+												<span class="value"><?php echo $item['comment']; ?></span>
+											</li>
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/deadline_icon.php'; ?></span>
+												締切</span>
+												<span class="value"><?php echo $item['deadline']; ?></span>
+											</li>
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/reg_date_icon.php'; ?></span>
+												登録日</span>
+												<span class="value"><?php echo $item['reg_date']; ?></span>
+											</li>
 
-										<?php foreach($item as $key => $value){ ?>
+										<!-- <?php foreach($item as $key => $value){ ?>
 											<?php if($key == "id"){ ?>
 											<input type="hidden" name="id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
 											<?php }else{ ?>					
@@ -84,7 +128,7 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 												<?php } ?>
 											</li>
 											<?php } ?>
-										<?php } ?>
+										<?php } ?> -->
 										<?php if($item['status'] == "未清算"){ ?>
 											<li class="settled_button mypage_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
 										<?php }else{ ?>
@@ -104,20 +148,50 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 											<?php }else{ ?>
 											<ul class="record_list settled" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?>">
 										<?php } ?>
-											<?php foreach($item as $key => $value){ ?>
-												<?php if($key == "id"){ ?>
-												<input type="hidden" name="id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
-												<?php }else{ ?>					
-												<li>
-													<span class="key"><?php echo $key; ?></span>
-													<?php if($value != null){ ?>
-														<span class="value"><?php echo $value; ?></span>
-													<?php }else{ ?>
-														<span class="value">-</span>
-													<?php } ?>
+												<input type="hidden" name="record_id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
+												<li class="single_value">
+													<span class="value type"><?php echo $item['type']; ?></span>
 												</li>
-												<?php } ?>
-											<?php } ?>
+												<li>
+													<span class="key">
+														<span>
+															<?php include './modules/svg/person_icon.php'; ?>
+														</span>
+													相手</span>
+													<span class="value"><?php echo $item['person']; ?></span>
+												</li>
+												<li>
+													<span class="key">
+														<span>
+															<?php include './modules/svg/amount_icon.php'; ?>
+														</span>
+													金額</span>
+													<span class="value"><?php echo $item['amount']; ?></span>
+												</li>
+												<li>
+													<span class="key">
+														<span><?php include './modules/svg/currency_icon.php'; ?></span>
+													通貨</span>
+													<span class="value"><?php echo $item['currency']; ?></span>
+												</li>
+												<li>
+													<span class="key">
+														<span><?php include './modules/svg/comment_icon.php'; ?></span>
+													内容</span>
+													<span class="value"><?php echo $item['comment']; ?></span>
+												</li>
+												<li>
+													<span class="key">
+														<span><?php include './modules/svg/deadline_icon.php'; ?></span>
+													締切</span>
+													<span class="value"><?php echo $item['deadline']; ?></span>
+												</li>
+												<li>
+													<span class="key">
+														<span><?php include './modules/svg/reg_date_icon.php'; ?></span>
+													登録日</span>
+													<span class="value"><?php echo $item['reg_date']; ?></span>
+												</li>
 											<?php if($item['status'] == "未清算"){ ?>
 												<li class="settled_button mypage_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
 											<?php }else{ ?>
@@ -139,13 +213,42 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 						<form v-on:submit.prevent="sendChange" v-else>
 							<p class="alert">以下のデータを清算済にしていいですか?</p>
 							<ul class="record_list">
-								<li><span class="key">Type</span><span>{{preview.type}}</span></li>
-								<li><span class="key">Person</span><span>{{preview.person}}</span></li>
-								<li><span class="key">Status</span><span>{{preview.status}}</span></li>
-								<li><span class="key">Amount</span><span>{{preview.amount}}</span></li>
-								<li><span class="key">Currency</span><span>{{preview.currency}}</span></li>
-								<li><span class="key">Comment</span><span>{{preview.comment}}</span></li>
-								<li><span class="key">Deadline</span><span>{{preview.deadline}}</span></li>
+								<li class="single_value">
+									<span class="type value">{{preview.type}}</span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/person_icon.php'; ?></span>
+									相手</span>
+									<span class="value">{{preview.person}}</span>
+								</li>
+								<!-- <li>
+									<span class="status">{{edit.status}}</span>
+								</li> -->
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/amount_icon.php'; ?></span>
+									金額</span>
+									<span class="value">{{preview.amount}}</span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/currency_icon.php'; ?></span>
+									通貨</span>
+									<span class="value">{{preview.currency}}</span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/comment_icon.php'; ?></span>
+									内容</span>
+									<span class="value">{{preview.comment}}</span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/deadline_icon.php'; ?></span>
+									締切</span>
+									<span class="value">{{preview.deadline}}</span>
+								</li>
 							</ul>
 							<div class="buttonArea">
 								<button class="button" type="submit">変更</button>
@@ -163,13 +266,42 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 						<form v-on:submit.prevent="sendArchive" v-else>
 							<p class="alert">アーカイブしてもいいですか?</p>
 							<ul class="record_list">
-								<li><span class="key">Type</span><span>{{preview.type}}</span></li>
-								<li><span class="key">Person</span><span>{{preview.person}}</span></li>
-								<li><span class="key">Status</span><span>{{preview.status}}</span></li>
-								<li><span class="key">Amount</span><span>{{preview.amount}}</span></li>
-								<li><span class="key">Currency</span><span>{{preview.currency}}</span></li>
-								<li><span class="key">Comment</span><span>{{preview.comment}}</span></li>
-								<li><span class="key">Deadline</span><span>{{preview.deadline}}</span></li>
+								<li class="single_value">
+									<span class="type value">{{preview.type}}</span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/person_icon.php'; ?></span>
+									相手</span>
+									<span class="value">{{preview.person}}</span>
+								</li>
+								<!-- <li>
+									<span class="status">{{edit.status}}</span>
+								</li> -->
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/amount_icon.php'; ?></span>
+									金額</span>
+									<span class="value">{{preview.amount}}</span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/currency_icon.php'; ?></span>
+									通貨</span>
+									<span class="value">{{preview.currency}}</span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/comment_icon.php'; ?></span>
+									内容</span>
+									<span class="value">{{preview.comment}}</span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/deadline_icon.php'; ?></span>
+									締切</span>
+									<span class="value">{{preview.deadline}}</span>
+								</li>
 							</ul>
 							<div class="buttonArea">
 								<button class="button" type="submit">アーカイブ</button>

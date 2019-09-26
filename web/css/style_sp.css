@@ -615,7 +615,7 @@ h1{
   content: '';
 }
 .loader:after {
-  background: #8eafc1;
+  background: #cae7f2;
   width: 75%;
   height: 75%;
   border-radius: 50%;
