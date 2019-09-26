@@ -77,14 +77,6 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 											<li>
 												<span class="key">
 													<span>
-														<?php include './modules/svg/person_icon.php'; ?>
-													</span>
-												相手</span>
-												<span class="value"><?php echo $item['person']; ?></span>
-											</li>
-											<li>
-												<span class="key">
-													<span>
 														<?php include './modules/svg/amount_icon.php'; ?>
 													</span>
 												金額</span>
@@ -151,14 +143,6 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 												<input type="hidden" name="record_id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
 												<li class="single_value">
 													<span class="value type"><?php echo $item['type']; ?></span>
-												</li>
-												<li>
-													<span class="key">
-														<span>
-															<?php include './modules/svg/person_icon.php'; ?>
-														</span>
-													相手</span>
-													<span class="value"><?php echo $item['person']; ?></span>
 												</li>
 												<li>
 													<span class="key">
