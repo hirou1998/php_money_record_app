@@ -56,16 +56,18 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 						<div v-if="closed == false" class="money_fields">
 							<?php// include './modules/money_fields.php'; ?>
 							<form v-on:submit="submit">
-								<div class="inputArea">
-									<p>type</p>
-									<select type="select" name="type" v-model="inputs.type">
-										<option value="貸し">貸し</option>
-										<option value="借り">借り</option>
-									</select>
-									<span>*required</span>  <span class="red_message">{{ err.typeErr }}</span>
+								<div class="checkArea">
+									<input id="radio_borrow" class="record_type_choice" type="radio" name="type" value="貸し" v-model="inputs.type">
+									<label class="check_label record_type" for="radio_borrow">貸し</label>
+									<input id="radio_lend" class="record_type_choice" type="radio" name="type" value="借り" v-model="inputs.type">
+									<label class="check_label record_type" for="radio_lend">借り</label>
 								</div>
 								<div class="inputArea">
-									<p>Person</p>
+									<p class="input_item">
+										<span>
+											<?php include './modules/svg/person_icon.php'; ?>
+										</span>
+									相手</p>
 									<div class="checkArea">
 										<input id="radio1" type="radio" name="choose" value="select" v-model="inputs.choose" v-on:change="changeOption">
 										<label class="check_label" for="radio1">履歴から選択する</label>
@@ -80,25 +82,29 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 											}
 											?>
 										</select>
-										<input type="text" name="person" v-model="inputs.person" v-else placeholder="Enter person's name"> 
+										<input type="text" name="person" v-model="inputs.person" v-else placeholder="相手の名前を入力してください。"> 
 									</div>
-									<span>*required</span>  <span class="red_message">{{ err.personErr }}</span>
+									<span>*必須</span>  <span class="red_message">{{ err.personErr }}</span>
+								</div>
+								<div class="checkArea">
+									<input id="radio_unsettled" type="radio" name="status" value="未清算" v-model="inputs.status">
+									<label class="check_label" for="radio_unsettled">未清算</label>
+									<input id="radio_settled" type="radio" name="status" value="清算済" v-model="inputs.status">
+									<label class="check_label" for="radio_settled">清算済</label>
 								</div>
 								<div class="inputArea">
-									<p>Status</p>
-									<select v-model="inputs.status">
-										<option value="未清算">未清算</option>
-										<option value="清算済">清算済</option>
-									</select>
-									<span>*required</span>  <span class="red_message">{{ err.statusErr }}</span>
-								</div>
-								<div class="inputArea">
-									<p>Amount</p>
+									<p class="input_item">
+										<span>
+											<?php include './modules/svg/amount_icon.php'; ?>
+										</span>
+									金額</p>
 									<input type="number" name="amount" v-model="inputs.amount">
-									<span>*required</span>  <span class="red_message">{{ err.amountErr }}</span>
+									<span>*必須</span>  <span class="red_message">{{ err.amountErr }}</span>
 								</div>
 								<div class="inputArea">
-									<p>Currency</p>
+									<p class="input_item">
+										<span><?php include './modules/svg/currency_icon.php'; ?></span>
+									通貨</p>
 									<select type="select" name="currency" v-model="inputs.currency">
 										<?php
 										foreach($currency_list as $currency_item){
@@ -108,17 +114,29 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 									</select>
 								</div>
 								<div class="inputArea">
-									<p>Comment</p>
+									<p class="input_item">
+										<span>
+											<?php include './modules/svg/comment_icon.php'; ?>
+										</span>
+									内容</p>
 									<textarea name="comment" v-model="inputs.comment"></textarea>
 								</div>
 								<div class="inputArea">
-									<p>Deadline</p>
+									<p class="input_item">
+										<span>
+											<?php include './modules/svg/deadline_icon.php'; ?>
+										</span>
+									締切</p>
 									<input type="date" name="deadline" v-model="inputs.deadline">
 								</div>
 								<div class="inputArea">
-									<p>Date</p>
+									<p class="input_item">
+										<span>
+											<?php include './modules/svg/reg_date_icon.php'; ?>
+										</span>
+									登録日</p>
 									<input type="date" name="date" v-model="inputs.date">
-									<span>*required</span>  <span class="red_message">{{ err.dateErr }}</span>
+									<span>*必須</span>  <span class="red_message">{{ err.dateErr }}</span>
 								</div>
 								<input type="hidden" name="tmp_token" v-model="inputs.tmp_token">
 								<div class="buttonArea">
@@ -144,7 +162,55 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 							<ul class="record_list borrow">
 							<?php } ?>
 
-							<?php foreach($item as $key => $value){ ?>
+								<input type="hidden" name="record_id" v-model="postData.record_id[<?php echo $num; ?>]">
+								<li class="single_value">
+									<span class="value type"><?php echo $item['type']; ?></span>
+								</li>
+								<li>
+									<span class="key">
+										<span>
+											<?php include './modules/svg/person_icon.php'; ?>
+										</span>
+									相手</span>
+									<span class="value"><?php echo $item['person']; ?></span>
+								</li>
+								<!-- <li class="single_value">
+									<span class="value"><?php echo $item['status']; ?></span>
+								</li> -->
+								<li>
+									<span class="key">
+										<span>
+											<?php include './modules/svg/amount_icon.php'; ?>
+										</span>
+									金額</span>
+									<span class="value"><?php echo $item['amount']; ?></span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/currency_icon.php'; ?></span>
+									通貨</span>
+									<span class="value"><?php echo $item['currency']; ?></span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/comment_icon.php'; ?></span>
+									内容</span>
+									<span class="value"><?php echo $item['comment']; ?></span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/deadline_icon.php'; ?></span>
+									締切</span>
+									<span class="value"><?php echo $item['deadline']; ?></span>
+								</li>
+								<li>
+									<span class="key">
+										<span><?php include './modules/svg/reg_date_icon.php'; ?></span>
+									登録日</span>
+									<span class="value"><?php echo $item['reg_date']; ?></span>
+								</li>
+
+							<!-- <?php foreach($item as $key => $value){ ?>
 								<?php if($key == 'id'){ ?>
 									<input type="hidden" name="record_id" v-model="postData.record_id[<?php echo $num; ?>]">
 								<?php }else{ ?>
@@ -157,7 +223,7 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 										<?php } ?>
 									</li>
 								<?php } ?>
-							<?php } ?>
+							<?php } ?> -->
 							<li class="buttons">
 								<button class="edit_button" type="submit" v-on:click="showEditModal">編集</button>
 								<button class="delete_button" type="submit" v-on:click="showDeleteModal">削除</button>
@@ -172,15 +238,18 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 								<div class="modal_content" v-on:click.stop >
 									<api-loading v-if="loading"></api-loading>
 									<form v-on:submit.prevent="sendUpdate" v-else>
-										<div class="inputArea">
-											<p>type</p>
-											<select type="select" name="type" v-model="edit.type">
-												<option value="貸し">貸し</option>
-												<option value="借り">借り</option>
-											</select>
+										<div class="checkArea">
+											<input id="radio_borrow" class="record_type_choice" type="radio" name="type" value="貸し" v-model="edit.type">
+											<label class="check_label record_type" for="radio_borrow">貸し</label>
+											<input id="radio_lend" class="record_type_choice" type="radio" name="type" value="借り" v-model="edit.type">
+											<label class="check_label record_type" for="radio_lend">借り</label>
 										</div>
 										<div class="inputArea">
-											<p>Person</p>
+											<p class="input_item">
+												<span>
+													<?php include './modules/svg/person_icon.php'; ?>
+												</span>
+											相手</p>
 											<div class="checkArea">
 												<input id="radio1" type="radio" name="choose" value="select" v-model="inputs.choose" v-on:change="changeOption">
 												<label class="check_label" for="radio1">履歴から選択する</label>
@@ -195,22 +264,29 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 													}
 													?>
 												</select>
-												<input type="text" name="person" v-model="edit.person" v-else placeholder="Enter person's name"> 
+												<input type="text" name="person" v-model="edit.person" v-else placeholder="相手の名前を入力してください。"> 
 											</div>
+											<span>*必須</span>  <span class="red_message">{{ err.personErr }}</span>
+										</div>
+										<div class="checkArea">
+											<input id="radio_unsettled" type="radio" name="status" value="未清算" v-model="edit.status">
+											<label class="check_label" for="radio_unsettled">未清算</label>
+											<input id="radio_settled" type="radio" name="status" value="清算済" v-model="edit.status">
+											<label class="check_label" for="radio_settled">清算済</label>
 										</div>
 										<div class="inputArea">
-											<p>Status</p>
-											<select v-model="edit.status">
-												<option value="未清算">未清算</option>
-												<option value="清算済">清算済</option>
-											</select>
-										</div>
-										<div class="inputArea">
-											<p>Amount</p>
+											<p class="input_item">
+												<span>
+													<?php include './modules/svg/amount_icon.php'; ?>
+												</span>
+											金額</p>
 											<input type="number" name="amount" v-model="edit.amount">
+											<span>*必須</span>  <span class="red_message">{{ err.amountErr }}</span>
 										</div>
 										<div class="inputArea">
-											<p>Currency</p>
+											<p class="input_item">
+												<span><?php include './modules/svg/currency_icon.php'; ?></span>
+											通貨</p>
 											<select type="select" name="currency" v-model="edit.currency">
 												<?php
 												foreach($currency_list as $currency_item){
@@ -220,11 +296,19 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 											</select>
 										</div>
 										<div class="inputArea">
-											<p>Comment</p>
+											<p class="input_item">
+												<span>
+													<?php include './modules/svg/comment_icon.php'; ?>
+												</span>
+											内容</p>
 											<textarea name="comment" v-model="edit.comment"></textarea>
 										</div>
 										<div class="inputArea">
-											<p>Deadline</p>
+											<p class="input_item">
+												<span>
+													<?php include './modules/svg/deadline_icon.php'; ?>
+												</span>
+											締切</p>
 											<input type="date" name="deadline" v-model="edit.deadline">
 										</div>
 										<input type="hidden" name="isUpdate" v-model="edit.updated">
@@ -244,13 +328,42 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 									<form v-on:submit.prevent="sendDelete" v-else>
 										<p class="alert">本当に削除してもいいですか?</p>
 										<ul class="record_list">
-											<li><span class="type value">{{edit.type}}</span></li>
-											<li><span class="key">相手</span><span class="value">{{edit.person}}</span></li>
-											<li><span class="status">{{edit.status}}</span></li>
-											<li><span class="key">金額</span><span class="value">{{edit.amount}}</span></li>
-											<li><span class="key">通貨</span><span class="value">{{edit.currency}}</span></li>
-											<li><span class="key">内容</span><span class="value">{{edit.comment}}</span></li>
-											<li><span class="key">締切</span><span class="value">{{edit.deadline}}</span></li>
+											<li class="single_value">
+												<span class="type value">{{edit.type}}</span>
+											</li>
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/person_icon.php'; ?></span>
+												相手</span>
+												<span class="value">{{edit.person}}</span>
+											</li>
+											<!-- <li>
+												<span class="status">{{edit.status}}</span>
+											</li> -->
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/amount_icon.php'; ?></span>
+												金額</span>
+												<span class="value">{{edit.amount}}</span>
+											</li>
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/currency_icon.php'; ?></span>
+												通貨</span>
+												<span class="value">{{edit.currency}}</span>
+											</li>
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/comment_icon.php'; ?></span>
+												内容</span>
+												<span class="value">{{edit.comment}}</span>
+											</li>
+											<li>
+												<span class="key">
+													<span><?php include './modules/svg/deadline_icon.php'; ?></span>
+												締切</span>
+												<span class="value">{{edit.deadline}}</span>
+											</li>
 										</ul>
 										<div class="buttonArea">
 											<button class="button" type="submit">削除</button>

@@ -24,7 +24,7 @@ $url = $_SERVER['REQUEST_URI'];
 </head>
 <nav id="navigation" class="nav_none">
 	<ul>
-		<li><a href="index.php">Money Record</a></li>
+		<li><a href="index.php"><img src="./img/logo.png"></a></li>
 		<?php
 			if($isLoggedIn){
 				if(strpos($url, 'mypage')){

@@ -48,6 +48,16 @@ select {
 input[type="radio"]{
 	display: none;
 }
+textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    resize: none;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+}
 h1{
 	margin:0;
 	text-align: center;
@@ -181,8 +191,9 @@ h1{
 	background: white;
     padding: 2vw;
     border-radius: 2vw;
-    width: 80%;
+    width: 70%;
     margin-left: 2vw;
+    border: solid 1px #001e2b;
 }
 .inputArea span{
 	color: red;
@@ -198,6 +209,9 @@ h1{
 }
 .inputArea textarea{
 	width: 100%;
+	background-color: white;
+	border-radius: 1vw;
+	border: solid 1px #001e2b;
 }
 .buttonArea{
 	display: flex;
@@ -282,11 +296,40 @@ h1{
     padding: 2vw 0;
     background: white;
     margin: 2vw;
+    border-radius: 1vw;
 }
 .checkArea input:checked + label{
-	background: #d81b60;
-	color: white;
+	background: #f6e12d;
+    color: #001e2b;
+    font-weight: bold;
+    border:solid 2px #001e2b;
 }
+.record_type{
+	padding: 5vw 0;
+    margin: 0 4vw;
+    /*background-image: url(../img/move_money.png);*/
+}
+/*.checkArea input.record_type_choice:checked + label{
+	background-image: url(../img/move_money.png);
+	color: white;
+}*/
+.input_item{
+	display: flex;
+	align-items: center;
+}
+.input_item span{
+	display: block;
+	margin-right: 1.5vw;
+}
+.form_icon{
+	width: 10vw;
+    height: 10vw;
+    opacity: 1;
+}
+.form_svg{
+	fill: #001e2b;
+}
+
 .record_list{
 	padding: 4vw;
     width: 88%;
@@ -303,12 +346,18 @@ h1{
 }
 .record_list li{
 	display: flex;
+	align-items: center;
 }
 .record_list li span{
 	display: block;
 }
 .record_list li span.key{
 	flex: 1;
+	display: flex;
+	align-items: center;
+}
+.record_list li span.key span{
+	transform: scale(0.7);
 }
 .record_list li span.value{
 	flex: 2;
@@ -324,13 +373,36 @@ h1{
 	flex:1;
 	margin: 0 1vw;
 	text-align: center;
+	font-weight: bold;
 }
 .record_list li.buttons button.edit_button{
-	background: green;
+	background: #f6e12d;
+    border: solid #001e2b 2px;
+    color: #001e2b;
 }
 .record_list li.buttons button.delete_button{
-
-	background: red;
+	background: #001e2b;
+    color: #f6e12d;
+}
+.record_list li.single_value{
+	width: 30%;
+	margin: 2vw auto;
+}
+.record_list li.single_value span.type{
+	text-align: center;
+    padding: 2vw 0;
+    border: solid;
+    border-radius: 1vw;
+    font-size: 6vw;
+    font-weight: bold;
+}
+.lend li.single_value span.type{
+	background: #f6e12d;
+}
+.borrow li.single_value span.type{
+	background-color: #001e2b;
+	color: #f6e12d;
+	border: none;
 }
 .record_block{
 	width: 90%;
@@ -409,7 +481,7 @@ h1{
 	background: rgba(0,0,0,0.8);
 }
 .modal_content{
-	background: #8eafc1;
+	background: #cae7f2;
     padding: 2vw;
     width: 90%;
     position: absolute;
@@ -417,8 +489,9 @@ h1{
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 2vw;
-    max-height: 87vh;
     min-height: 40vh;
+    max-height: 60vh;
+    overflow: scroll;
 }
 .close_button{
 	position: absolute;

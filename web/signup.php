@@ -126,42 +126,34 @@ new Vue({
 			sex: ""
 		},
 		submitted: false,
-		select: true,
 		loading: false
 	},
 	methods: {
 		resetErr: function(){
 			this.err.usernameErr = this.err.passwordErr = this.err.password_checkErr = this.err.emailErr = this.err.sexErr = null;
 		},
-		changeOption: function(e){
-			if(e.target.value == 'select'){
-				this.select = true;
-			}else{
-				this.select = false;
-			}
-		},
 		validation: function(e){
 			this.isErr = false;
 			this.resetErr();
 			if(this.inputs.username == null){
-				this.err.usernameErr = "User name is required.";
+				this.err.usernameErr = "ユーザー名が必要です。";
 				this.isErr = true;
 			}
 			if(this.inputs.password == null){
-				this.err.passwordErr = "Password is required";
+				this.err.passwordErr = "パスワードが必要です。";
 				this.isErr = true;
 			}
 			if(this.inputs.password_check == null || this.inputs.password != this.inputs.password_check){
-				this.err.password_checkErr = "Password and password_check are not the same";
+				this.err.password_checkErr = "パスワードとパスワード(確認用)が異なります";
 				this.password_check = null;
 				this.isErr = true;
 			}
 			if(this.inputs.email == null){
-				this.err.emailErr = "Email is required";
+				this.err.emailErr = "メールアドレスが必要です。";
 				this.isErr = true;
 			}
 			if(this.inputs.sex == null){
-				this.err.sexErr = "Choose your sex";
+				this.err.sexErr = "性別を選んでください。";
 				this.isErr = true;
 			}
 			if(this.isErr == false){
