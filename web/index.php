@@ -174,9 +174,6 @@ $ids = json_encode($moneymodel->getRecordId($userid));
 									相手</span>
 									<span class="value"><?php echo $item['person']; ?></span>
 								</li>
-								<!-- <li class="single_value">
-									<span class="value"><?php echo $item['status']; ?></span>
-								</li> -->
 								<li>
 									<span class="key">
 										<span>

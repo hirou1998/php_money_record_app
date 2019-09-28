@@ -39,11 +39,11 @@ if(isset($_SESSION['login'])){
 				</div>
 				<div class="checkArea inputArea">
 					<p>性別</p>
-					<input id="radio_male" type="radio" name="sex" value="male" v-model="inputs.sex" v-on:change="changeOption">
+					<input id="radio_male" type="radio" name="sex" value="male" v-model="inputs.sex">
 					<label class="check_label" for="radio_male">男性</label>
-					<input id="radio_female" type="radio" name="sex" value="female" v-model="inputs.sex" v-on:change="changeOption">
+					<input id="radio_female" type="radio" name="sex" value="female" v-model="inputs.sex">
 					<label class="check_label" for="radio_female">女性</label>
-					<input id="radio_other" type="radio" name="sex" value="other" v-model="inputs.sex" v-on:change="changeOption">
+					<input id="radio_other" type="radio" name="sex" value="other" v-model="inputs.sex">
 					<label class="check_label" for="radio_other">その他</label>
 					<!-- <select type="select" name="sex" v-model="inputs.sex">
 						<option value="male">Male</option>

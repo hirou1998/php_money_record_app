@@ -6,29 +6,30 @@ class MoneyModel{
 
 	private $dao = null;
 	private $uermodel = null;
-	private $currency_list = array('JPY', 'USD', 'EUR', 'SEK');
-	private $exchange_rate_list = array(
-		"JPY" => array(
-			"USD" => 107.55,
-			"EUR" => 118.52,
-			"SEK" => 11.08
-		),
-		"USD" => array(
-			"JPY" => 0.0092,
-			"EUR" => 1.102,
-			"SEK" => 0.103
-		),
-		"EUR" => array(
-			"JPY" => 0.0084,
-			"USD" => 0.907,
-			"SEK" => 0.093,
-		),
-		"SEK" => array(
-			"JPY" => 0.09,
-			"USD" => 9.70,
-			"EUR" => 10.693
-		)
-	);
+	private $currency_list = array('JPY', 'USD', 'EUR', 'SEK', 'KRW', 'CNY', 'HKD');
+	// private $exchange_rate_list_f = array(
+	// 	"JPY" => array(
+	// 		"USD" => [107.55, '2019-09-28 00:56:37'],
+	// 		"EUR" => 118.52,
+	// 		"SEK" => 11.08
+	// 	),
+	// 	"USD" => array(
+	// 		"JPY" => 0.0092,
+	// 		"EUR" => 1.102,
+	// 		"SEK" => 0.103
+	// 	),
+	// 	"EUR" => array(
+	// 		"JPY" => 0.0084,
+	// 		"USD" => 0.907,
+	// 		"SEK" => 0.093,
+	// 	),
+	// 	"SEK" => array(
+	// 		"JPY" => 0.09,
+	// 		"USD" => 9.70,
+	// 		"EUR" => 10.693
+	// 	)
+	// );
+	private $exchange_rate_list = array();
 
 	public function __construct(){
 		$this->dao = new Dao();
@@ -229,9 +230,89 @@ class MoneyModel{
 	}
 
 	public function calculateExchange($myCurrency, $recordCurrency){
-		$exchange_rate = $this->exchange_rate_list[$myCurrency][$recordCurrency];
+		$exchange_rate_list = $this->exchange_rate_list;
+		//var_dump($exchange_rate_list);
 
+		if(!empty($exchange_rate_list)){
+
+			//var_dump("not empty");
+
+			if(array_key_exists($myCurrency, $exchange_rate_list)){
+
+				$my_currency_exchange_rate = $exchange_rate_list[$myCurrency];
+				//var_dump("mycyrrency in array");
+
+				if(array_key_exists($recordCurrency, $my_currency_exchange_rate)){
+
+					date_default_timezone_set("Europe/London");
+					$current_time = date('Y-m-d H:i:s');
+					$last_executed_time = $my_currency_exchange_rate[$recordCurrency][1];
+					$time_diff = abs(strtotime($current_time) - strtotime($last_executed_time)) / (60 * 60);
+					//var_dump("record currency in array");
+
+					if($time_diff > 3){
+
+						$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+						foreach ($result as $key => $value) {
+							$my_currency_exchange_rate[$recordCurrency][$key] = $value;	
+						}
+						$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
+						//var_dump("three hours passed");
+
+					}else{
+
+						$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
+						//var_dump("widtin three hours since last api was call");
+
+					}
+
+				}else{
+
+					$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+					$my_currency_exchange_rate = $my_currency_exchange_rate + array($recordCurrency => array($result[0], $result[1]));
+					$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
+					//var_dump("record curreny not in array");
+
+				}
+
+			}else{
+
+				$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+				$arr = array($myCurrency => array($recordCurrency => array($result[0], $result[1])));
+				$exchange_rate_list = $exchange_rate_list + $arr;
+				$exchange_rate = $exchange_rate_list[$myCurrency][$recordCurrency][0];
+				//var_dump("my currency not in array");	
+
+			}
+
+		}else{
+
+			$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+			$arr = array($myCurrency => array($recordCurrency => array($result[0], $result[1])));
+			$this->exchange_rate_list = $arr;
+			$exchange_rate = $result[0];
+			//var_dump($exchange_rate_list);
+			//var_dump("first");
+
+		}
+
+		//var_dump($exchange_rate_list);
 		return $exchange_rate;
+	}
+
+	public function callApiToGetExchangeRate($myCurrency, $recordCurrency){
+		$key = $recordCurrency . '_' . $myCurrency;
+		$api = 'https://free.currconv.com/api/v7/convert?q=' . $key . '&compact=ultra&apiKey=f603ebb5d1a5a0b6e8c0';
+		$result = json_decode(file_get_contents($api), true);
+		$new_exchange_rate = $result[$key];
+
+		$result = json_decode(file_get_contents('https://free.currconv.com/others/usage?apiKey=f603ebb5d1a5a0b6e8c0'),true);
+		$date = substr($result["timestamp"], 0,  strpos($result["timestamp"], 'T'));
+		$time = substr($result["timestamp"], 11, 8);
+		$date_time = $date . ' ' . $time;
+		//var_dump($date_time);
+
+		return $result = array($new_exchange_rate, $date_time);
 	}
 
 	public function changeToSettled($id){
