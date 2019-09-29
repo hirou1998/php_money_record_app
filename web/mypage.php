@@ -17,6 +17,7 @@ $profile = $usermodel->getUserProfile($userid);
 require_once './model/moneyModel.php';
 $moneymodel = new MoneyModel();
 $records = $moneymodel->getAllRecordsBasedOnPerson($userid, $profile['currency']);
+//var_dump($records);
 $personsLIst = $moneymodel->getPersonsList($userid);
 $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCAPED_UNICODE);
 ?>
@@ -46,16 +47,21 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 			<article>
 				<?php foreach ($records as $num => $record) { ?>
 					<ul class="record_block">
-						<li class="record_block_top"><span class="person_name"><?php echo $personsLIst[$num]; ?></span>
-							<?php $total = array_pop($record); ?>
-							<span class="total">合計
-							<?php if($total > 0){ ?>
-								<span class="total_amount amount_plus"><?php echo $total; ?></span>
-							<?php }else{ ?>
-								<span class="total_amount amount_minus"><?php echo $total; ?></span>
-							<?php } ?> 
-							<?php echo $profile['currency']; ?></span>
-						</li>
+							<?php
+								$person_name = array_pop($record);
+								$total = array_pop($record);
+								//var_dump($record);
+							?>
+							<li class="record_block_top">
+								<span class="person_name"><?php echo $person_name; ?></span>
+								<span class="total">合計
+								<?php if($total > 0){ ?>
+									<span class="total_amount amount_plus"><?php echo $total; ?></span>
+								<?php }else{ ?>
+									<span class="total_amount amount_minus"><?php echo $total; ?></span>
+								<?php } ?> 
+								<?php echo $profile['currency']; ?></span>
+							</li>
 						<div class="see_more_button" v-on:click="showMoreRecords('<?php echo $personsLIst[$num]; ?>')" v-if="recordsVisibility.<?php echo $personsLIst[$num]; ?> == false">すべて表示</div>
 						<?php foreach ($record as $index => $item) { ?>
 							<?php if($index == 0){ ?>

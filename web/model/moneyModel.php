@@ -6,30 +6,7 @@ class MoneyModel{
 
 	private $dao = null;
 	private $uermodel = null;
-	private $currency_list = array('JPY', 'USD', 'EUR', 'SEK', 'KRW', 'CNY', 'HKD');
-	// private $exchange_rate_list_f = array(
-	// 	"JPY" => array(
-	// 		"USD" => [107.55, '2019-09-28 00:56:37'],
-	// 		"EUR" => 118.52,
-	// 		"SEK" => 11.08
-	// 	),
-	// 	"USD" => array(
-	// 		"JPY" => 0.0092,
-	// 		"EUR" => 1.102,
-	// 		"SEK" => 0.103
-	// 	),
-	// 	"EUR" => array(
-	// 		"JPY" => 0.0084,
-	// 		"USD" => 0.907,
-	// 		"SEK" => 0.093,
-	// 	),
-	// 	"SEK" => array(
-	// 		"JPY" => 0.09,
-	// 		"USD" => 9.70,
-	// 		"EUR" => 10.693
-	// 	)
-	// );
-	private $exchange_rate_list = array();
+	private $currency_list = array('JPY', 'USD', 'EUR', 'SEK', 'KRW', 'CNY', 'HKD');	
 
 	public function __construct(){
 		$this->dao = new Dao();
@@ -158,8 +135,8 @@ class MoneyModel{
 
 	public function calculationTotalAmount($result, $myCurrency){
 		$totalAmount = 0;
-		foreach ($result as $item) {	
-			if($item['status'] == '未清算'){
+		foreach ($result as $key => $item) {
+		    if($item['status'] == '未清算'){
 				//exchange
 				if($item['currency'] == $myCurrency){
 					if($item['type'] == '貸し'){
@@ -171,7 +148,6 @@ class MoneyModel{
 					}
 				}else{
 					$exchange_rate = $this->calculateExchange($myCurrency, $item['currency']);
-					//var_dump($exchange_rate);
 					if($item['type'] == '貸し'){
 						$amount =intval($item['amount'] * $exchange_rate);
 						$totalAmount += $amount;
@@ -193,15 +169,22 @@ class MoneyModel{
 		$result = array();
 		foreach ($personsList as $person) {
 			$record = $this->getRecordBasedOnPerson($userid, $person);
+			//$record = $record + array('person_name' => $person);
 			array_push($result, $record);
 		}
 
 		$data = array();
-		foreach ($result as $item) {
+		foreach ($result as $key => $item) {
 			$total = $this->calculationTotalAmount($item, $myCurrency);
 			$item = $item + array('total' => $total);
+			$item = $item + array('person_name' => $personsList[$key]);
 			array_push($data, $item);
 		}
+
+		foreach ($data as $key => $value) {
+			$sort_keys[$key] = abs($value['total']);
+		}
+		array_multisort($sort_keys, SORT_DESC, $data);
 
 		return $data;
 	}
@@ -303,7 +286,7 @@ class MoneyModel{
 			$this->saveExchangeRate($myCurrency, $recordCurrency, $exchange_rate, $last_executed_time);
 
 			//var_dump("first");
-			
+
 		}
 
 		// if($exchange_rate != null{
