@@ -229,72 +229,144 @@ class MoneyModel{
 		$this->dao->delete($sql, $arr);
 	}
 
+	public function saveExchangeRate($base_currency, $converted_currency, $exchange_rate, $last_executed_time){
+		$sql = "INSERT INTO exchange_rate (base_currency, converted_currency, exchange_rate, last_executed_time)
+				VALUES (:base_currency, :converted_currency, :exchange_rate, :last_executed_time)";
+		$arr = array(
+			":base_currency" => $base_currency,
+			":converted_currency" => $converted_currency,
+			":exchange_rate" => $exchange_rate,
+			":last_executed_time" => $last_executed_time
+		);
+
+		$this->dao->insert($sql, $arr);
+	}
+
+	public function upadteExchangeRate($base_currency, $converted_currency, $exchange_rate, $last_executed_time){
+		$sql = "UPDATE exchange_rate SET exchange_rate = :exchange_rate, last_executed_time = :last_executed_time WHERE base_currency = :base_currency AND converted_currency = :converted_currency";
+		$arr = array(
+			":base_currency" => $base_currency,
+			":converted_currency" => $converted_currency,
+			":exchange_rate" => $exchange_rate,
+			":last_executed_time" => $last_executed_time
+		);
+
+		$this->dao->update($sql, $arr);
+	}
+
+	public function getExchangeRateFromTable($base_currency, $converted_currency){
+		$sql = "SELECT exchange_rate, last_executed_time FROM exchange_rate WHERE base_currency = :base_currency AND converted_currency = :converted_currency";
+		$arr = array(
+			":base_currency" => $base_currency,
+			":converted_currency" => $converted_currency
+		);
+		$result = $this->dao->select($sql, $arr);
+
+		return $result;
+	}
+
 	public function calculateExchange($myCurrency, $recordCurrency){
-		$exchange_rate_list = $this->exchange_rate_list;
-		//var_dump($exchange_rate_list);
+		$current_data = $this->getExchangeRateFromTable($myCurrency, $recordCurrency);
+		$exchange_rate = $current_data['exchange_rate'];
+		$last_executed_time = $current_data['last_executed_time'];
 
-		if(!empty($exchange_rate_list)){
+		//when exchange record has already saved
+		if($exchange_rate != null){
 
-			//var_dump("not empty");
+			date_default_timezone_set("Asia/Tokyo");
+			$current_time = date('Y-m-d H:i:s');
+			$time_diff = abs(strtotime($current_time) - strtotime($last_executed_time)) / (60 * 60);
 
-			if(array_key_exists($myCurrency, $exchange_rate_list)){
+			//var_dump("no");
 
-				$my_currency_exchange_rate = $exchange_rate_list[$myCurrency];
-				//var_dump("mycyrrency in array");
+			//when last executed time is more than three hours ago
+			if($time_diff > 12){
 
-				if(array_key_exists($recordCurrency, $my_currency_exchange_rate)){
+				$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+				$exchange_rate = $result[0];
+				$last_executed_time = $result[1];
+				$this->upadteExchangeRate($myCurrency, $recordCurrency, $exchange_rate, $last_executed_time);
 
-					date_default_timezone_set("Europe/London");
-					$current_time = date('Y-m-d H:i:s');
-					$last_executed_time = $my_currency_exchange_rate[$recordCurrency][1];
-					$time_diff = abs(strtotime($current_time) - strtotime($last_executed_time)) / (60 * 60);
-					//var_dump("record currency in array");
-
-					if($time_diff > 3){
-
-						$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
-						foreach ($result as $key => $value) {
-							$my_currency_exchange_rate[$recordCurrency][$key] = $value;	
-						}
-						$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
-						//var_dump("three hours passed");
-
-					}else{
-
-						$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
-						//var_dump("widtin three hours since last api was call");
-
-					}
-
-				}else{
-
-					$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
-					$my_currency_exchange_rate = $my_currency_exchange_rate + array($recordCurrency => array($result[0], $result[1]));
-					$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
-					//var_dump("record curreny not in array");
-
-				}
+				//var_dump("time passed");
 
 			}else{
 
-				$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
-				$arr = array($myCurrency => array($recordCurrency => array($result[0], $result[1])));
-				$exchange_rate_list = $exchange_rate_list + $arr;
-				$exchange_rate = $exchange_rate_list[$myCurrency][$recordCurrency][0];
-				//var_dump("my currency not in array");	
+				//var_dump("within three hours");
 
 			}
 
 		}else{
 
 			$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
-			$arr = array($myCurrency => array($recordCurrency => array($result[0], $result[1])));
-			$this->exchange_rate_list = $arr;
 			$exchange_rate = $result[0];
-			//var_dump($exchange_rate_list);
-			//var_dump("first");
+			$last_executed_time = $result[1];
+			$this->saveExchangeRate($myCurrency, $recordCurrency, $exchange_rate, $last_executed_time);
 
+			//var_dump("first");
+			
 		}
+
+		// if($exchange_rate != null{
+
+		// 	//var_dump("not empty");
+
+		// 	if(array_key_exists($myCurrency, $exchange_rate_list)){
+
+		// 		$my_currency_exchange_rate = $exchange_rate_list[$myCurrency];
+		// 		//var_dump("mycyrrency in array");
+
+		// 		if(array_key_exists($recordCurrency, $my_currency_exchange_rate)){
+
+					
+		// 			$last_executed_time = $my_currency_exchange_rate[$recordCurrency][1];
+					
+		// 			//var_dump("record currency in array");
+
+		// 			if($time_diff > 3){
+
+		// 				$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+		// 				foreach ($result as $key => $value) {
+		// 					$my_currency_exchange_rate[$recordCurrency][$key] = $value;	
+		// 				}
+		// 				$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
+		// 				//var_dump("three hours passed");
+
+		// 			}else{
+
+		// 				$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
+		// 				//var_dump("widtin three hours since last api was call");
+
+		// 			}
+
+		// 		}else{
+
+		// 			$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+		// 			$my_currency_exchange_rate = $my_currency_exchange_rate + array($recordCurrency => array($result[0], $result[1]));
+		// 			$exchange_rate = $my_currency_exchange_rate[$recordCurrency][0];
+		// 			//var_dump("record curreny not in array");
+
+		// 		}
+
+		// 	}else{
+
+		// 		$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+		// 		$arr = array($myCurrency => array($recordCurrency => array($result[0], $result[1])));
+		// 		$exchange_rate_list = $exchange_rate_list + $arr;
+		// 		$exchange_rate = $exchange_rate_list[$myCurrency][$recordCurrency][0];
+		// 		//var_dump("my currency not in array");	
+
+		// 	}
+
+		// }else{
+
+		// 	$result = $this->callApiToGetExchangeRate($myCurrency, $recordCurrency);
+		// 	$arr = array($myCurrency => array($recordCurrency => array($result[0], $result[1])));
+		// 	$this->exchange_rate_list = $arr;
+		// 	$exchange_rate = $result[0];
+		// 	//var_dump($exchange_rate_list);
+		// 	//var_dump("first");
+
+		// }
 
 		//var_dump($exchange_rate_list);
 		return $exchange_rate;

@@ -59,5 +59,15 @@ class Dao{
 		$stmt->execute($arr);
 	}
 
+	// public function insertCountries($country_name, $currency_name){
+	// 	$sql = "INSERT INTO countries_currency (country_name, currency_name)
+	// 			VALUES (:country_name, :currency_name)";
+	// 	$arr = array(
+	// 		":country_name" => $country_name,
+	// 		":currency_name" => $currency_name
+	// 	);
+	// 	$this->insert($sql, $arr);
+	// }
+
 }
 ?>

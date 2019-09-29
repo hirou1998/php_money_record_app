@@ -106,21 +106,6 @@ $idList = json_encode($moneymodel->makeIdListBasedOnPerson($userid), JSON_UNESCA
 												登録日</span>
 												<span class="value"><?php echo $item['reg_date']; ?></span>
 											</li>
-
-										<!-- <?php foreach($item as $key => $value){ ?>
-											<?php if($key == "id"){ ?>
-											<input type="hidden" name="id" v-model="idList.<?php echo $personsLIst[$num]; ?>[<?php echo $index; ?>]">
-											<?php }else{ ?>					
-											<li>
-												<span class="key"><?php echo $key; ?></span>
-												<?php if($value != null){ ?>
-													<span class="value"><?php echo $value; ?></span>
-												<?php }else{ ?>
-													<span class="value">-</span>
-												<?php } ?>
-											</li>
-											<?php } ?>
-										<?php } ?> -->
 										<?php if($item['status'] == "未清算"){ ?>
 											<li class="settled_button mypage_button"><button type="submit" v-on:click="showSettledModal">清算済にする</button></li>
 										<?php }else{ ?>
