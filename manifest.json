@@ -1,0 +1,16 @@
+{
+	"name": "Money Record",
+	"short_name": "Money Record",
+	"description": "お金の貸し借りを記録するアプリケーション",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#f6e12d",
+	"theme_color": "#f6e12d",
+	"icons": [
+		{
+			"src": "web/img/icon.png",
+			"sizes": "192×192",
+			"type": "image/png"
+		}
+	]
+}
