@@ -14,7 +14,7 @@ $url = $_SERVER['REQUEST_URI'];
 	<link rel="stylesheet" type="text/css" href="./css/style_pc.css" media="screen and (min-width: 801px)">
 	<link rel="stylesheet" type="text/css" href="./css/style_sp.css" media="screen and (max-width: 800px)">
 	<link href="https://fonts.googleapis.com/css?family=Kosugi+Maru&display=swap" rel="stylesheet">
-	<link rel="manifest" href="../manifest.json">
+	<!-- <link rel="manifest" href="../manifest.json"> -->
 	<style type="text/css">body{font-family: 'Kosugi Maru', sans-serif;}</style>
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
