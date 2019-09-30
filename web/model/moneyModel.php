@@ -14,7 +14,18 @@ class MoneyModel{
 	}
 
 	public function getCurrencyList(){
+
 		return $this->currency_list;
+	}
+
+	public function getCurrencyList_new($input_word){
+		$sql = "SELECT country_name, currency_name FROM countries_currency WHERE country_name collate utf8_unicode_ci LIKE :input_word";
+		$arr = array(
+			":input_word" => "%".$input_word."%"
+		);
+		$result = $this->dao->selectMultipulData($sql, $arr);
+		
+		return $result;
 	}
 
 	public function registerMoneyRecord($userid, $type, $person, $status, $amount, $currency, $comment, $deadline, $date, $status_number){
